@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import tweetsRoute from './router/twitter.js';
+import tweetsRoute from './router/tweet.js';
 
 const app = express();
 
