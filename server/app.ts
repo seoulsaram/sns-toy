@@ -1,8 +1,8 @@
 import cors from 'cors';
-import express from 'express';
+import express, { Response } from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import tweetsRoute from './router/tweet.js';
+import tweetsRoute from './router/tweet';
 
 const app = express();
 
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   res.sendStatus(404);
 });
 
-app.use((error, req, res, next) => {
+app.use((error: any, req: any, res: Response<any, any>) => {
   console.error(error);
   res.sendStatus(500);
 });

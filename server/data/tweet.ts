@@ -1,4 +1,13 @@
-let tweets = [
+type TweetType = {
+  id: number;
+  text: string;
+  createdAt: string;
+  name: string;
+  username: string;
+  url?: string;
+};
+
+let tweets: TweetType[] = [
   {
     id: 1,
     text: '드림코딩에서 강의 들으면 너무 좋으다',
@@ -21,19 +30,19 @@ export async function getAll() {
   return tweets;
 }
 
-export async function getAllByUsername(username) {
+export async function getAllByUsername(username: string) {
   return tweets.filter((t) => t.username === username);
 }
 
-export async function getById(id) {
+export async function getById(id: string) {
   return tweets.find((tweet) => tweet.id === Number(id));
 }
 
-export async function create(text, name, username) {
+export async function create(text: string, name: string, username: string) {
   const tweet = {
     id: Date.now(),
     text,
-    createdAt: new Date(),
+    createdAt: Date(),
     name,
     username,
   };
@@ -41,7 +50,7 @@ export async function create(text, name, username) {
   return tweet;
 }
 
-export async function update(id, text) {
+export async function update(id: string, text: string) {
   const tweet = tweets.find((tweet) => tweet.id === Number(id));
   if (tweet) {
     tweet.text = text;
@@ -49,6 +58,6 @@ export async function update(id, text) {
   return tweet;
 }
 
-export async function remove(id) {
+export async function remove(id: string) {
   tweets = tweets.filter((t) => t.id !== Number(id));
 }

@@ -1,14 +1,15 @@
-import * as tweetRepository from '../data/tweet.js';
+import * as tweetRepository from '../data/tweet';
+import { Request, Response } from 'express';
 
-export async function getTweets(req, res) {
-  const username = req.query?.username;
+export async function getTweets(req: Request, res: Response) {
+  const username = req.query?.username as string | undefined;
   const data = await (username
     ? tweetRepository.getAllByUsername(username)
     : tweetRepository.getAll());
   res.status(200).json(data);
 }
 
-export async function getTweet(req, res) {
+export async function getTweet(req: Request, res: Response) {
   const id = req.params?.id;
   const tweet = await tweetRepository.getById(id);
   if (tweet) {
@@ -18,18 +19,14 @@ export async function getTweet(req, res) {
   }
 }
 
-export async function postTweet(req, res) {
+export async function postTweet(req: Request, res: Response) {
   const { text, name, username } = req.body;
 
-  if (!text || !name || !username) {
-    res.status(400).json({ message: 'Data format is not valid' });
-  } else {
-    const tweet = await tweetRepository.create(text, name, username);
-    res.status(201).json(tweet);
-  }
+  const tweet = await tweetRepository.create(text, name, username);
+  res.status(201).json(tweet);
 }
 
-export async function updateTweet(req, res) {
+export async function updateTweet(req: Request, res: Response) {
   const id = req.params?.id;
   const text = req.body?.text;
   const tweet = await tweetRepository.update(id, text);
@@ -37,16 +34,12 @@ export async function updateTweet(req, res) {
     res.status(404).json({ message: 'No post found' });
     return;
   }
-  if (!text) {
-    res.status(400).json({ message: 'Data format is not valid' });
-    return;
-  }
 
   tweet.text = text;
   res.status(200).json(tweet);
 }
 
-export async function deleteTweet(req, res) {
+export async function deleteTweet(req: Request, res: Response) {
   const id = req.params?.id;
   const allContent = await tweetRepository.getAll();
   const isIdValid = allContent.find((t) => t.id === Number(id));
