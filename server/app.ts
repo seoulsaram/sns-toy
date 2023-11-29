@@ -3,6 +3,7 @@ import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'e
 import morgan from 'morgan';
 import helmet from 'helmet';
 import tweetsRoute from './router/tweet';
+import authRoute from './router/auth';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(
 );
 
 app.use('/tweets', tweetsRoute);
+app.use('/auth', authRoute);
 
 app.use((req, res) => {
 	res.sendStatus(404);
