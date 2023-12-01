@@ -2,51 +2,49 @@ import * as tweetRepository from '../data/tweet';
 import { Request, Response } from 'express';
 
 export async function getTweets(req: Request, res: Response) {
-  const username = req.query?.username as string | undefined;
-  const data = await (username
-    ? tweetRepository.getAllByUsername(username)
-    : tweetRepository.getAll());
-  res.status(200).json(data);
+	const username = req.query?.username as string | undefined;
+	const data = await (username ? tweetRepository.getAllByUsername(username) : tweetRepository.getAll());
+	res.status(200).json(data.filter(tweet => tweet === null));
 }
 
 export async function getTweet(req: Request, res: Response) {
-  const id = req.params?.id;
-  const tweet = await tweetRepository.getById(id);
-  if (tweet) {
-    res.status(200).json(tweet);
-  } else {
-    res.status(404).json({ message: `Tweet id(${id}) not found` });
-  }
+	const id = req.params?.id;
+	const tweet = await tweetRepository.getById(id);
+	if (tweet) {
+		res.status(200).json(tweet);
+	} else {
+		res.status(404).json({ message: `Tweet id(${id}) not found` });
+	}
 }
 
 export async function postTweet(req: Request, res: Response) {
-  const { text, name, username } = req.body;
+	const { text } = req.body;
 
-  const tweet = await tweetRepository.create(text, name, username);
-  res.status(201).json(tweet);
+	const tweet = await tweetRepository.create(text, req.userId);
+	res.status(201).json(tweet);
 }
 
 export async function updateTweet(req: Request, res: Response) {
-  const id = req.params?.id;
-  const text = req.body?.text;
-  const tweet = await tweetRepository.update(id, text);
-  if (!tweet) {
-    res.status(404).json({ message: 'No post found' });
-    return;
-  }
+	const id = req.params?.id;
+	const text = req.body?.text;
+	const tweet = await tweetRepository.update(id, text);
+	if (!tweet) {
+		res.status(404).json({ message: 'No post found' });
+		return;
+	}
 
-  tweet.text = text;
-  res.status(200).json(tweet);
+	tweet.text = text;
+	res.status(200).json(tweet);
 }
 
 export async function deleteTweet(req: Request, res: Response) {
-  const id = req.params?.id;
-  const allContent = await tweetRepository.getAll();
-  const isIdValid = allContent.find((t) => t.id === Number(id));
-  if (!isIdValid) {
-    res.status(404).json({ message: 'No post found' });
-  } else {
-    await tweetRepository.remove(id);
-    res.sendStatus(204);
-  }
+	const id = req.params?.id;
+	const tweets = await tweetRepository.getAll();
+	const isIdValid = tweets.find(t => t?.id === id);
+	if (!isIdValid) {
+		res.status(404).json({ message: 'No post found' });
+	} else {
+		await tweetRepository.remove(id);
+		res.sendStatus(204);
+	}
 }
