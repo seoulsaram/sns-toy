@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 export async function getTweets(req: Request, res: Response) {
 	const username = req.query?.username as string | undefined;
 	const data = await (username ? tweetRepository.getAllByUsername(username) : tweetRepository.getAll());
-	res.status(200).json(data.filter(tweet => tweet === null));
+	res.status(200).json(data.filter(tweet => tweet !== null));
 }
 
 export async function getTweet(req: Request, res: Response) {
@@ -25,16 +25,19 @@ export async function postTweet(req: Request, res: Response) {
 }
 
 export async function updateTweet(req: Request, res: Response) {
-	const id = req.params?.id;
-	const text = req.body?.text;
-	const tweet = await tweetRepository.update(id, text);
-	if (!tweet) {
-		res.status(404).json({ message: 'No post found' });
-		return;
+	try {
+		const id = req.params?.id;
+		const text = req.body?.text;
+		const tweet = await tweetRepository.update(id, text);
+		if (!tweet) {
+			res.status(404).json({ message: 'Tweet dose not exist.' });
+			return;
+		}
+		tweet.text = text;
+		res.status(200).json(tweet);
+	} catch (error) {
+		res.status(404).json({ message: 'Tweet dose not exist.' });
 	}
-
-	tweet.text = text;
-	res.status(200).json(tweet);
 }
 
 export async function deleteTweet(req: Request, res: Response) {

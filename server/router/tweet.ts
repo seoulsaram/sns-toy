@@ -3,7 +3,7 @@ import { body } from 'express-validator';
 
 import * as tweetController from '../controller/tweet';
 import { validate } from '../middleware/validator';
-import { isAuth } from '../middleware/auth';
+import { isAuth, isMine } from '../middleware/auth';
 
 const router = express.Router();
 
@@ -23,9 +23,9 @@ router.get('/:id', isAuth, tweetController.getTweet);
 router.post('/', isAuth, validateTweet, tweetController.postTweet);
 
 // UPDATE /tweets:id
-router.put('/:id', isAuth, validateTweet, tweetController.updateTweet);
+router.put('/:id', isAuth, isMine, validateTweet, tweetController.updateTweet);
 
 // DELETE /tweets:id
-router.delete('/:id', isAuth, tweetController.deleteTweet);
+router.delete('/:id', isAuth, isMine, tweetController.deleteTweet);
 
 export default router;

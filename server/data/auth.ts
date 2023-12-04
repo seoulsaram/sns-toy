@@ -10,9 +10,9 @@ export type User = {
 let users: User[] = [
 	{
 		id: '1234',
-		username: 'bonbonbon',
+		username: 'bonbon',
 		password: '12345',
-		name: 'bonbonbon',
+		name: 'bonbon',
 		email: 'kaste2233@gmail.com',
 	},
 	{
@@ -27,7 +27,6 @@ let users: User[] = [
 export async function createUser(userInfo: Omit<User, 'id'>): Promise<string> {
 	const created: User = { ...userInfo, id: Date.now().toString() };
 	users.push(created);
-	console.log('created', created);
 	return created.id;
 }
 
