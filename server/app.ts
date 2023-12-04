@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import tweetsRoute from './router/tweet';
 import authRoute from './router/auth';
+import { config } from './config';
 
 const app = express();
 
@@ -28,4 +29,4 @@ app.use((error: ErrorRequestHandler, req: Request, res: Response, next: NextFunc
 	res.sendStatus(500);
 });
 
-app.listen(8080);
+app.listen(config.host.port);
