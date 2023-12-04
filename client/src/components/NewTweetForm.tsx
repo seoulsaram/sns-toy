@@ -18,7 +18,6 @@ const NewTweetForm = ({ tweetService, onError, onCreated }: Props) => {
 			.postTweet(tweet)
 			.then(created => {
 				setTweet('');
-				onCreated(created);
 			})
 			.catch(onError);
 	};

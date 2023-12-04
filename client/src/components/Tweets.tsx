@@ -24,6 +24,13 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 			.getTweets(username)
 			.then(tweets => setTweets([...tweets]))
 			.catch(onError);
+
+		const stopSync = tweetService.onSync('create', tweet => {
+			onCreated(tweet);
+		});
+		return () => {
+			stopSync();
+		};
 	}, [tweetService, username, user]);
 
 	const onCreated = (tweet: TweetType) => {
@@ -36,11 +43,15 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 			.then(() => setTweets(tweets => tweets.filter(tweet => tweet.id !== tweetId)))
 			.catch(error => setError(error.toString()));
 
-	const onUpdate = (tweetId: string, text: string) =>
+	const onUpdate = (tweetId: string, text: string) => {
 		tweetService
 			.updateTweet(tweetId, text)
 			.then(updated => setTweets(tweets => tweets.map(item => (item.id === updated.id ? updated : item))))
 			.catch(error => error.toString());
+		tweetService.onSync('update', tweet => {
+			setTweets(tweets => tweets.map(item => (item.id === tweet.id ? tweet : item)));
+		});
+	};
 
 	const onUsernameClick = (tweet: TweetType) => navigate(`/${tweet.username}`);
 

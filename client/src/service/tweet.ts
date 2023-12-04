@@ -1,13 +1,17 @@
 import TokenStorage from '../db/token';
 import HttpClient from '../network/http';
+import SocketClient from '../network/socket';
+import { TweetType } from '../types/tweet.type';
 
 export default class TweetService {
 	private http: HttpClient;
 	private tokenStorage: TokenStorage;
+	private socket: SocketClient;
 
-	constructor(http: HttpClient, tokenStorage: TokenStorage) {
+	constructor(http: HttpClient, tokenStorage: TokenStorage, socket: SocketClient) {
 		this.http = http;
 		this.tokenStorage = tokenStorage;
+		this.socket = socket;
 	}
 
 	async getTweets(username: string) {
@@ -46,5 +50,9 @@ export default class TweetService {
 		return {
 			Authorization: `Bearer ${token}`,
 		};
+	}
+
+	onSync(type: 'create' | 'update', callback: (tweet: TweetType) => void) {
+		return this.socket.onSync(`tweets-${type}`, callback);
 	}
 }
