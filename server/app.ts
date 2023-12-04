@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import tweetsRoute from './router/tweet';
 import authRoute from './router/auth';
 import { config } from './config';
+import { initSocket } from './connection/socket';
 
 const app = express();
 
@@ -29,4 +30,5 @@ app.use((error: ErrorRequestHandler, req: Request, res: Response, next: NextFunc
 	res.sendStatus(500);
 });
 
-app.listen(config.host.port);
+const server = app.listen(config.host.port);
+initSocket(server);

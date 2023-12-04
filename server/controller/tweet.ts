@@ -1,3 +1,4 @@
+import { getSocketIO } from '../connection/socket';
 import * as tweetRepository from '../data/tweet';
 import { Request, Response } from 'express';
 
@@ -22,6 +23,7 @@ export async function postTweet(req: Request, res: Response) {
 
 	const tweet = await tweetRepository.create(text, req.userId);
 	res.status(201).json(tweet);
+	getSocketIO().emit('tweets-create', tweet);
 }
 
 export async function updateTweet(req: Request, res: Response) {
@@ -35,6 +37,7 @@ export async function updateTweet(req: Request, res: Response) {
 		}
 		tweet.text = text;
 		res.status(200).json(tweet);
+		getSocketIO().emit('tweets-update', tweet);
 	} catch (error) {
 		res.status(404).json({ message: 'Tweet dose not exist.' });
 	}

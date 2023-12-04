@@ -5,6 +5,9 @@ import { findById } from '../data/auth';
 import { config } from '../config';
 
 const AUTH_ERROR = { message: 'Authentication Error' };
+interface DecodedToken {
+	id: string;
+}
 
 export const isAuth = async (req: Request, res: Response, next: NextFunction) => {
 	const authHeader = req.get('Authorization');
@@ -14,15 +17,18 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
 
 	const token = authHeader.split(' ')[1];
 
-	jwt.verify(token, config.jwt.secretKey, async (error: VerifyErrors | null, decoded: any) => {
-		if (error) return res.status(401).json(AUTH_ERROR);
-
-		const user = await findById(decoded.id);
-		if (!user) return res.status(401).json(AUTH_ERROR);
-		req.userId = user.id;
-		req.token = token;
-		next();
-	});
+	jwt.verify(
+		token,
+		config.jwt.secretKey,
+		async (error: VerifyErrors | null, decoded: string | jwt.JwtPayload['id'] | undefined) => {
+			if (error || !decoded) return res.status(401).json(AUTH_ERROR);
+			const user = await findById(decoded?.id);
+			if (!user) return res.status(401).json(AUTH_ERROR);
+			req.userId = user.id;
+			req.token = token;
+			next();
+		}
+	);
 };
 
 export const isOwner = async (req: Request, res: Response, next: NextFunction) => {
