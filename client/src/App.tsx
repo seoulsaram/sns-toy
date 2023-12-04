@@ -11,7 +11,6 @@ type Props = { tweetService: TweetService };
 
 function App({ tweetService }: Props) {
 	const { user, logout, signUp, logIn } = useAuth();
-
 	return (
 		<div className="app">
 			<BrowserRouter>
@@ -20,7 +19,7 @@ function App({ tweetService }: Props) {
 						{!user ? (
 							<Route path="" element={<Login onSignUp={signUp} onLogin={logIn} />} />
 						) : (
-							<Route path="" element={<AllTweets tweetService={tweetService} />} />
+							<Route path="" element={<AllTweets tweetService={tweetService} username={user?.username ?? ''} />} />
 						)}
 
 						<Route path=":username" element={<MyTweets tweetService={tweetService} />} />

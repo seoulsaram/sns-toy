@@ -11,6 +11,7 @@ import React, {
 } from 'react';
 import { User } from '../types/user.type';
 import AuthService from '../service/auth';
+import AuthErrorEventBus from '../util/authErrorEventBus';
 
 export type SignUpType = (
 	username: string,
@@ -47,14 +48,6 @@ const AuthContext = createContext<{
 });
 
 const contextRef = createRef();
-
-export class AuthErrorEventBus {
-	private callback = (error?: string) => {};
-
-	listen(callback: () => void): void {
-		this.callback = callback;
-	}
-}
 
 type Props = {
 	authService: AuthService;

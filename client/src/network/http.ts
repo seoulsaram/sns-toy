@@ -1,7 +1,12 @@
+import AuthError from '../types/errors/authError.type';
+import AuthErrorEventBus from '../util/authErrorEventBus';
+
 export default class HttpClient {
 	private baseURL: string;
-	constructor(baseURL: string) {
+	private authErrorEventBus: AuthErrorEventBus;
+	constructor(baseURL: string, authErrorEventBus: AuthErrorEventBus) {
 		this.baseURL = baseURL;
+		this.authErrorEventBus = authErrorEventBus;
 	}
 
 	async fetch(url: string, options?: RequestInit) {
@@ -22,7 +27,11 @@ export default class HttpClient {
 
 		if (res.status > 299 || res.status < 200) {
 			const message = data && data.message ? data.message : 'Something went wrong!';
-			throw new Error(message);
+			const error = new AuthError({ name: 'AUTH_ERROR', message, cause: new Error() });
+
+			if (res.status === 401) {
+				this.authErrorEventBus.notify(error);
+			}
 		}
 		return data;
 	}

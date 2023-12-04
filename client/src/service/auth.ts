@@ -1,45 +1,48 @@
+import TokenStorage from '../db/token';
+import HttpClient from '../network/http';
+
 export default class AuthService {
-	private username: string = '';
-	private token: string = '';
-	private password: string = '';
-	private name: string = '';
-	private email: string = '';
-	private url: string | undefined = '';
+	private http: HttpClient;
+	private tokenStorage: TokenStorage;
 
-	async login(username: string, password: string) {
-		// Assuming you want to use instance properties like this
-		this.username = username;
-		this.token = password;
-		return {
-			username: this.username,
-			token: this.token,
-		};
-	}
-
-	async me() {
-		// Assuming you want to use instance properties like this
-		// return {
-		// 	username: this.username,
-		// 	token: this.token,
-		// };
-		return undefined;
-	}
-
-	async logout() {
-		// You might perform logout-related tasks here
+	constructor(http: HttpClient, tokenStorage: TokenStorage) {
+		this.http = http;
+		this.tokenStorage = tokenStorage;
 	}
 
 	async signup(username: string, password: string, name: string, email: string, url?: string) {
-		// Assuming you want to use instance properties like this
-		this.username = username;
-		this.password = password;
-		this.name = name;
-		this.email = email;
-		this.url = url;
-		this.token = 'abc1234';
-		return {
-			username: this.username,
-			token: this.token,
-		};
+		const data = await this.http.fetch('/auth/signup', {
+			method: 'POST',
+			body: JSON.stringify({
+				username,
+				password,
+				name,
+				email,
+				url,
+			}),
+		});
+		this.tokenStorage.saveToken(data.token);
+		return data;
+	}
+
+	async login(username: string, password: string) {
+		const data = await this.http.fetch('/auth/login', {
+			method: 'POST',
+			body: JSON.stringify({ username, password }),
+		});
+		this.tokenStorage.saveToken(data.token);
+		return data;
+	}
+
+	async me() {
+		const token = this.tokenStorage.getToken();
+		return this.http.fetch('/auth/me', {
+			method: 'GET',
+			headers: { Authorization: `Bearer ${token}` },
+		});
+	}
+
+	async logout() {
+		this.tokenStorage.clearToken();
 	}
 }
