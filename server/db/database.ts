@@ -1,12 +1,9 @@
-import mysql from 'mysql2';
 import { config } from '../config';
+import { Sequelize } from 'sequelize';
 
-// mysql 접속
-const pool = mysql.createPool({
-	host: config.db.host,
-	user: config.db.user,
-	database: config.db.database,
-	password: config.db.password,
+const { host, user, database, password } = config.db;
+export const sequelize = new Sequelize(database, user, password, {
+	host,
+	dialect: 'mysql',
+	logging: console.log,
 });
-
-export const db = pool.promise();
