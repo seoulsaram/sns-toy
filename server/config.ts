@@ -13,6 +13,12 @@ type Config = {
 	host: {
 		port: number;
 	};
+	db: {
+		host: string;
+		user: string;
+		database: string;
+		password: string;
+	};
 };
 
 function required(key: string, defaultValue?: number | string) {
@@ -33,5 +39,11 @@ export const config: Config = {
 	},
 	host: {
 		port: Number(required('HOST_PORT', 8080)),
+	},
+	db: {
+		host: required('DB_HOST') as string,
+		user: required('DB_USER') as string,
+		database: required('DB_PROJECT') as string,
+		password: required('DB_PASSWORD') as string,
 	},
 };
