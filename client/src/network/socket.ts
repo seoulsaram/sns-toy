@@ -8,7 +8,7 @@ export default class SocketClient {
 			auth: cb => cb({ token: getAccessToken() }),
 		});
 
-		this.io.on('connect_error', err => {
+		this.io.on('error', err => {
 			console.error('socket error', err.message);
 		});
 	}
