@@ -1,3 +1,6 @@
+import { FieldPacket, OkPacket } from 'mysql2';
+import { db } from '../db/database';
+
 export type User = {
 	id: string;
 	username: string;
@@ -7,33 +10,24 @@ export type User = {
 	url?: string;
 };
 
-let users: User[] = [
-	{
-		id: '1234',
-		username: 'bonbon',
-		password: '12345',
-		name: 'bonbon',
-		email: 'kaste2233@gmail.com',
-	},
-	{
-		id: '1701309260160',
-		username: 'Bonbon2',
-		password: '$2b$12$/4jDa/kBazoxdP0EnXLs2erPeGqoruTecGhDVp2ZcwLyIGl23EaEy',
-		name: '본댕이',
-		email: 'kaste2233@gmail.com',
-	},
-];
+export async function createUser(user: Omit<User, 'id'>): Promise<number> {
+	const { username, password, name, email, url } = user;
+	const result: [OkPacket, FieldPacket[]] = await db.execute(
+		'INSERT INTO users (username, password, name, email, url) VALUES (?,?,?,?,?)',
+		[username, password, name, email, url ?? null]
+	);
 
-export async function createUser(userInfo: Omit<User, 'id'>): Promise<string> {
-	const created: User = { ...userInfo, id: Date.now().toString() };
-	users.push(created);
-	return created.id;
+	return result[0].insertId;
 }
 
-export async function findByUsername(username: string): Promise<User | undefined> {
-	return users.find(user => user.username === username);
+export async function findByUsername(username: string): Promise<User> {
+	const [data, _] = await db.query('SELECT * FROM users WHERE username=?', [username]);
+	const userData: User[] = data as User[];
+	return userData?.[0] || [];
 }
 
-export async function findById(id: string): Promise<User | undefined> {
-	return users.find(user => user.id === id);
+export async function findById(id: string): Promise<User> {
+	const [data, _] = await db.query('SELECT * FROM users WHERE id=?', [id]);
+	const userData: User[] = data as User[];
+	return userData?.[0] || [];
 }

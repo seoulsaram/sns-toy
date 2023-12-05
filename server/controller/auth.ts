@@ -14,7 +14,7 @@ export async function signup(req: Request, res: Response) {
 
 	const hashed = await bcrypt.hash(user.password, config.bcrypt.saltRounds);
 	const userId = await createUser({ ...user, password: hashed });
-	const token = createJwtToken(userId);
+	const token = createJwtToken(userId.toString());
 	res.status(201).json({ token, username: user.username });
 }
 
