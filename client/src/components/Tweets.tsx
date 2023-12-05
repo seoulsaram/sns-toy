@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Banner from './Banner';
 import NewTweetForm from './NewTweetForm';
 import TweetCard from './TweetCard';
@@ -17,11 +17,12 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 	const [tweets, setTweets] = useState<TweetType[]>([]);
 	const [error, setError] = useState('');
 	const navigate = useNavigate();
-	const { user } = useAuth();
+	const usernameQuery = useParams();
 
+	const { user } = useAuth();
 	useEffect(() => {
 		tweetService
-			.getTweets(username)
+			.getTweets(usernameQuery?.username)
 			.then(tweets => setTweets([...tweets]))
 			.catch(onError);
 
@@ -31,7 +32,7 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 		return () => {
 			stopSync();
 		};
-	}, [tweetService, username, user]);
+	}, [tweetService, usernameQuery, user]);
 
 	const onCreated = (tweet: TweetType) => {
 		setTweets(tweets => [tweet, ...tweets]);
