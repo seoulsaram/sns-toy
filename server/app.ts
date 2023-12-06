@@ -32,7 +32,7 @@ app.use((error: ErrorRequestHandler, req: Request, res: Response, next: NextFunc
 });
 
 connectDB()
-	.then(db => {
+	.then(() => {
 		const server = app.listen(config.host.port);
 		initSocket(server);
 	})
