@@ -15,9 +15,6 @@ type Config = {
 	};
 	db: {
 		host: string;
-		user: string;
-		database: string;
-		password: string;
 	};
 };
 
@@ -42,8 +39,5 @@ export const config: Config = {
 	},
 	db: {
 		host: required('DB_HOST') as string,
-		user: required('DB_USER') as string,
-		database: required('DB_PROJECT') as string,
-		password: required('DB_PASSWORD') as string,
 	},
 };

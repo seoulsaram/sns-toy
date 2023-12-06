@@ -1,86 +1,65 @@
-import { FieldPacket, OkPacket } from 'mysql2';
-import { db } from '../db/database';
+import { ObjectId, WithId } from 'mongodb';
+import { getTweets } from '../db/database';
 import { findById } from './auth';
 
 type TweetType = {
-	// id: string;
-	// text: string;
-	// createdAt: string;
-	// userId: string;
-	// url?: string;
-
-	id: number;
-	text: string;
-	createdAt: string;
-	url?: string;
-	username: string;
-	name: string;
-};
-
-type TweetTypeWithUserInfo = {
 	id: string;
 	text: string;
-	createdAt: string;
+	createdAt: Date;
 	url?: string;
 	username: string;
 	name: string;
 };
 
-// let tweets: TweetType[] = [
-// 	{
-// 		id: '1',
-// 		userId: '1701309260160',
-// 		text: '드림코딩에서 강의 들으면 너무 좋으다',
-// 		createdAt: '2021-05-09T04:20:57.000Z',
-// 		url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
-// 	},
-// 	{
-// 		id: '2',
-// 		text: '꺄아옹',
-// 		userId: '1701309260160',
-// 		createdAt: '2021-05-09T04:20:57.000Z',
-// 		url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
-// 	},
-// ];
-
-const SELECT_JOIN =
-	'SELECT tw.id, tw.text, tw.createdAt, us.username, us.name, us.url FROM tweets as tw JOIN users as us ON tw.userId=us.id';
-const ORDER_DESC = 'ORDER BY tw.createdAt DESC';
-
 export async function getAll(): Promise<TweetType[]> {
-	const [data, _] = await db.query(`${SELECT_JOIN} ${ORDER_DESC}`);
-
-	const tweets: TweetType[] = data as TweetType[];
-	return tweets;
+	const result = await getTweets().find<WithId<TweetType>>({}).sort({ createdAt: -1 }).toArray();
+	return mapTweets(result);
 }
 
 export async function getAllByUsername(username: string): Promise<TweetType[]> {
-	const [data, _] = await db.query(`${SELECT_JOIN} WHERE us.username=? ${ORDER_DESC}`, [username]);
-	const tweets: TweetType[] = data as TweetType[];
-	return tweets;
+	const result = await getTweets().find<WithId<TweetType>>({ username }).sort({ createdAt: -1 }).toArray();
+	return mapTweets(result);
 }
 
-export async function getById(id: string): Promise<TweetType> {
-	const [data, _] = await db.query(`${SELECT_JOIN} WHERE tw.id=? ${ORDER_DESC}`, [id]);
-	const tweets: TweetType[] = data as TweetType[];
-	return tweets[0];
+export async function getById(id: string): Promise<TweetType | null> {
+	return getTweets()
+		.findOne<WithId<TweetType>>({ _id: new ObjectId(id) })
+		.then(mapOptionalTweet);
 }
 
-export async function create(text: string, userId: string): Promise<any> {
-	const result: [OkPacket, FieldPacket[]] = await db.execute(
-		'INSERT INTO tweets (text, createdAt, userId) VALUES(?,?,?)',
-		[text, new Date(), userId]
-	);
-	return getById(result[0].insertId.toString());
+export async function create(text: string, userId: string): Promise<TweetType | null> {
+	const user = await findById(userId);
+	if (!user) throw new Error('user not found');
+	const { username, name, url } = user;
+	const tweet = {
+		text,
+		createdAt: new Date(),
+		userId,
+		name,
+		username,
+		url,
+	};
+
+	return getTweets()
+		.insertOne(tweet)
+		.then(data => mapOptionalTweet({ ...tweet, _id: data.insertedId }));
 }
 
-export async function update(id: string, text: string): Promise<any> {
-	await db.execute('UPDATE tweets SET text=? WHERE id=?', [text, id]);
-	return getById(id);
+export async function update(id: string, text: string): Promise<TweetType | null> {
+	return getTweets()
+		.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: { text } }, { returnDocument: 'after' })
+		.then(data => mapOptionalTweet(data as WithId<TweetType>));
 }
 
-export async function remove(id: number) {
-	const data = await db.execute('DELETE FROM tweets WHERE id=?', [id]);
-	console.log('data', data);
-	return data;
+export async function remove(id: string) {
+	return getTweets().deleteOne({ _id: new ObjectId(id) });
+}
+
+function mapOptionalTweet(tweet: (Omit<TweetType, 'id'> & { _id: ObjectId }) | null): TweetType | null {
+	if (!tweet) return tweet;
+	return { ...tweet, id: tweet._id.toString() };
+}
+
+function mapTweets(tweets: (Omit<TweetType, 'id'> & { _id: ObjectId })[]): TweetType[] {
+	return tweets.map(mapOptionalTweet).filter(tweet => tweet !== null) as TweetType[];
 }

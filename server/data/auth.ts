@@ -1,6 +1,5 @@
-import { FieldPacket, OkPacket } from 'mysql2';
-import { db } from '../db/database';
-
+import { getUsers } from '../db/database';
+import { WithId, ObjectId } from 'mongodb';
 export type User = {
 	id: string;
 	username: string;
@@ -10,24 +9,38 @@ export type User = {
 	url?: string;
 };
 
-export async function createUser(user: Omit<User, 'id'>): Promise<number> {
+export async function createUser(user: Omit<User, 'id'>): Promise<string> {
 	const { username, password, name, email, url } = user;
-	const result: [OkPacket, FieldPacket[]] = await db.execute(
-		'INSERT INTO users (username, password, name, email, url) VALUES (?,?,?,?,?)',
-		[username, password, name, email, url ?? null]
-	);
-
-	return result[0].insertId;
+	return getUsers()
+		.insertOne({
+			username,
+			password,
+			name,
+			email,
+			url: url ?? null,
+		})
+		.then(result => result.insertedId.toString());
 }
 
-export async function findByUsername(username: string): Promise<User> {
-	const [data, _] = await db.query('SELECT * FROM users WHERE username=?', [username]);
-	const userData: User[] = data as User[];
-	return userData?.[0] || [];
+export async function findByUsername(username: string): Promise<User | null> {
+	return getUsers().findOne<WithId<User>>({ username }).then(mapOptionalUser);
 }
 
-export async function findById(id: string): Promise<User> {
-	const [data, _] = await db.query('SELECT * FROM users WHERE id=?', [id]);
-	const userData: User[] = data as User[];
-	return userData?.[0] || [];
+export async function findById(id: string): Promise<User | null> {
+	return getUsers()
+		.findOne<WithId<User>>({ _id: new ObjectId(id) })
+		.then(mapOptionalUser);
+}
+
+function mapOptionalUser(user: WithId<User> | null) {
+	if (!user) return user;
+	const { username, name, url, email, _id, password } = user;
+	return {
+		id: _id.toString(),
+		username,
+		name,
+		url,
+		email,
+		password,
+	};
 }

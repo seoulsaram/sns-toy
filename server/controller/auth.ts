@@ -11,10 +11,9 @@ export async function signup(req: Request, res: Response) {
 	if (found) {
 		return res.status(409).json({ message: `${user.username} already exists` });
 	}
-
 	const hashed = await bcrypt.hash(user.password, config.bcrypt.saltRounds);
 	const userId = await createUser({ ...user, password: hashed });
-	const token = createJwtToken(userId.toString());
+	const token = createJwtToken(userId);
 	res.status(201).json({ token, username: user.username });
 }
 
@@ -32,7 +31,7 @@ export async function login(req: Request, res: Response) {
 	if (!isValidPassword) {
 		return res.status(401).json(ERROR_MESSAGE);
 	}
-	const token = createJwtToken(user.id);
+	const token = createJwtToken(user.id.toString());
 	res.status(200).json({ token, username });
 }
 

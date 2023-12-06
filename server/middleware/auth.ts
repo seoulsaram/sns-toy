@@ -5,9 +5,6 @@ import { findById } from '../data/auth';
 import { config } from '../config';
 
 const AUTH_ERROR = { message: 'Authentication Error' };
-interface DecodedToken {
-	id: string;
-}
 
 export const isAuth = async (req: Request, res: Response, next: NextFunction) => {
 	const authHeader = req.get('Authorization');

@@ -1,12 +1,25 @@
-import mysql from 'mysql2';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 import { config } from '../config';
 
-// mysql 접속
-const pool = mysql.createPool({
-	host: config.db.host,
-	user: config.db.user,
-	database: config.db.database,
-	password: config.db.password,
+export const client = new MongoClient(config.db.host, {
+	serverApi: {
+		version: ServerApiVersion.v1,
+		strict: true,
+		deprecationErrors: true,
+	},
 });
 
-export const db = pool.promise();
+export async function connectDB() {
+	return client
+		.connect()
+		.then(db => db)
+		.finally(() => {});
+}
+
+export function getUsers() {
+	return client.db('Dwitter').collection('users');
+}
+
+export function getTweets() {
+	return client.db('Dwitter').collection('tweets');
+}
