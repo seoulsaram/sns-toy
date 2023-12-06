@@ -16,8 +16,14 @@ export default class TweetService {
 
 	async getTweets(username?: string) {
 		const query = username ? `?username=${username}` : '';
-		console.log('query', query);
 		return this.http.fetch(`/tweets${query}`, {
+			method: 'GET',
+			headers: this.getHeaders(),
+		});
+	}
+
+	async getTweet(id: string) {
+		return this.http.fetch(`/tweets/${id}`, {
 			method: 'GET',
 			headers: this.getHeaders(),
 		});
