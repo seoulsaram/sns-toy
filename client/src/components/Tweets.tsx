@@ -64,6 +64,10 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 		}, 3000);
 	};
 
+	const onCardClick = (tweetId: string) => {
+		tweetService.getTweet(tweetId).then(tweet => setTweets([tweet]));
+	};
+
 	return (
 		<>
 			{addable && <NewTweetForm tweetService={tweetService} onError={onError} onCreated={onCreated} />}
@@ -78,6 +82,7 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 						onDelete={onDelete}
 						onUpdate={onUpdate}
 						onUsernameClick={onUsernameClick}
+						onCardClick={onCardClick}
 					/>
 				))}
 			</ul>
