@@ -42,13 +42,13 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 		tweetService
 			.deleteTweet(tweetId)
 			.then(() => setTweets(tweets => tweets.filter(tweet => tweet.id !== tweetId)))
-			.catch(error => setError(error.toString()));
+			.catch(error => onError(error.toString()));
 
 	const onUpdate = (tweetId: string, text: string) => {
 		tweetService
 			.updateTweet(tweetId, text)
 			.then(updated => setTweets(tweets => tweets.map(item => (item.id === updated.id ? updated : item))))
-			.catch(error => error.toString());
+			.catch(error => onError(error.toString()));
 		tweetService.onSync('update', tweet => {
 			setTweets(tweets => tweets.map(item => (item.id === tweet.id ? tweet : item)));
 		});
@@ -65,7 +65,10 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 	};
 
 	const onCardClick = (tweetId: string) => {
-		tweetService.getTweet(tweetId).then(tweet => setTweets([tweet]));
+		tweetService
+			.getTweet(tweetId)
+			.then(tweet => setTweets([tweet]))
+			.catch(onError);
 	};
 
 	return (

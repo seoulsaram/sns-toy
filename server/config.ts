@@ -10,11 +10,12 @@ type Config = {
 	bcrypt: {
 		saltRounds: number;
 	};
-	host: {
-		port: number;
-	};
 	db: {
 		host: string;
+	};
+	port: number;
+	corse: {
+		allowedOrigin: string;
 	};
 };
 
@@ -34,10 +35,11 @@ export const config: Config = {
 	bcrypt: {
 		saltRounds: Number(required('BCRYPT_SORT_ROUNDS', 12)),
 	},
-	host: {
-		port: Number(required('HOST_PORT', 8080)),
-	},
 	db: {
 		host: required('DB_HOST') as string,
+	},
+	port: Number(required('PORT', 8080)),
+	corse: {
+		allowedOrigin: required('CORS_ALLOW_ORIGIN') as string,
 	},
 };
