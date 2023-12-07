@@ -1,8 +1,8 @@
-import { FieldPacket, OkPacket } from 'mysql2';
-import { db } from '../db/database';
-import { findById } from './auth';
+import { DataTypes, FindOptions, Model, Sequelize } from 'sequelize';
+import { sequelize } from '../db/database';
+import { User } from './auth';
 
-type TweetType = {
+type TweetType = Model & {
 	id: number;
 	text: string;
 	createdAt: string;
@@ -11,43 +11,91 @@ type TweetType = {
 	name: string;
 };
 
+export const Tweet = sequelize.define<TweetType>('tweet', {
+	id: {
+		type: DataTypes.INTEGER,
+		primaryKey: true,
+		allowNull: false,
+		unique: true,
+		autoIncrement: true,
+	},
+	text: {
+		type: DataTypes.TEXT,
+		allowNull: false,
+	},
+});
+
+// 관계 정의해줌. 알아서 FK를 만들어준다. 때문에 userId필드를 명시해주지 않음.
+Tweet.belongsTo(User);
+
 const SELECT_JOIN =
 	'SELECT tw.id, tw.text, tw.createdAt, us.username, us.name, us.url FROM tweets as tw JOIN users as us ON tw.userId=us.id';
-const ORDER_DESC = 'ORDER BY tw.createdAt DESC';
+// const ORDER_DESC = 'ORDER BY tw.createdAt DESC';
+
+const INCLUDE_USER: FindOptions = {
+	attributes: [
+		'id',
+		'text',
+		'createdAt',
+		'userId',
+		'updatedAt',
+		[Sequelize.col('user.name'), 'name'],
+		[Sequelize.col('user.username'), 'username'],
+		[Sequelize.col('user.url'), 'url'],
+	],
+	include: {
+		model: User,
+		attributes: [],
+	},
+};
+
+const ORDER_DESC: FindOptions = { order: [['createdAt', 'DESC']] };
 
 export async function getAll(): Promise<TweetType[]> {
-	const [data, _] = await db.query(`${SELECT_JOIN} ${ORDER_DESC}`);
-
-	const tweets: TweetType[] = data as TweetType[];
-	return tweets;
+	const res: TweetType[] = await Tweet.findAll<TweetType>({
+		...INCLUDE_USER,
+		...ORDER_DESC,
+	});
+	return res;
 }
 
 export async function getAllByUsername(username: string): Promise<TweetType[]> {
-	const [data, _] = await db.query(`${SELECT_JOIN} WHERE us.username=? ${ORDER_DESC}`, [username]);
-	const tweets: TweetType[] = data as TweetType[];
-	return tweets;
+	const res: TweetType[] = await Tweet.findAll<TweetType>({
+		...INCLUDE_USER,
+		...ORDER_DESC,
+		include: {
+			model: User,
+			attributes: [],
+			where: { username },
+		},
+	});
+	return res;
 }
 
-export async function getById(id: string): Promise<TweetType> {
-	const [data, _] = await db.query(`${SELECT_JOIN} WHERE tw.id=? ${ORDER_DESC}`, [id]);
-	const tweets: TweetType[] = data as TweetType[];
-	return tweets[0];
+export async function getById(id: string): Promise<TweetType | null> {
+	const res: TweetType | null = await Tweet.findOne<TweetType>({
+		where: { id },
+		...INCLUDE_USER,
+	});
+	return res;
 }
 
-export async function create(text: string, userId: string): Promise<any> {
-	const result: [OkPacket, FieldPacket[]] = await db.execute(
-		'INSERT INTO tweets (text, createdAt, userId) VALUES(?,?,?)',
-		[text, new Date(), userId]
-	);
-	return getById(result[0].insertId.toString());
+export async function create(text: string, userId: string): Promise<TweetType | null> {
+	const res = await Tweet.create({ text, userId });
+	const created = getById(res.dataValues.id);
+	return created;
 }
 
-export async function update(id: string, text: string): Promise<any> {
-	await db.execute('UPDATE tweets SET text=? WHERE id=?', [text, id]);
-	return getById(id);
+export async function update(id: string, text: string): Promise<TweetType | null> {
+	const res = await Tweet.findByPk(id, INCLUDE_USER);
+	if (!res) {
+		throw new Error();
+	}
+	res.text = text;
+	return res.save();
 }
 
 export async function remove(id: number) {
-	const data = await db.execute('DELETE FROM tweets WHERE id=?', [id]);
-	return data;
+	const res = await Tweet.findByPk(id);
+	res?.destroy();
 }

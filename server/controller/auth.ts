@@ -24,13 +24,12 @@ export async function login(req: Request, res: Response) {
 	const { username, password } = req.body;
 	const user = await findByUsername(username);
 	if (!user) {
-		return res.status(401).json(ERROR_MESSAGE);
+		return res.status(404).json(ERROR_MESSAGE);
 	}
 
 	const isValidPassword = await bcrypt.compare(password, user.password);
-
 	if (!isValidPassword) {
-		return res.status(401).json(ERROR_MESSAGE);
+		return res.status(404).json(ERROR_MESSAGE);
 	}
 	const token = createJwtToken(user.id);
 	res.status(200).json({ token, username });

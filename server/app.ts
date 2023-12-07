@@ -6,7 +6,7 @@ import tweetsRoute from './router/tweet';
 import authRoute from './router/auth';
 import { config } from './config';
 import { initSocket } from './connection/socket';
-import { db } from './db/database';
+import { sequelize } from './db/database';
 
 const app = express();
 
@@ -32,6 +32,7 @@ app.use((error: ErrorRequestHandler, req: Request, res: Response, next: NextFunc
 	res.sendStatus(500);
 });
 
-db.getConnection();
-const server = app.listen(config.port);
-initSocket(server);
+sequelize.sync().then(() => {
+	const server = app.listen(config.port);
+	initSocket(server);
+});
