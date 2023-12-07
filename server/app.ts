@@ -10,14 +10,15 @@ import { db } from './db/database';
 
 const app = express();
 
+const corsOption = {
+	origin: config.corse.allowedOrigin.split(','),
+	optionsSuccessStatus: 200,
+};
+
 app.use(express.json());
 app.use(helmet());
 app.use(morgan('tiny'));
-app.use(
-	cors({
-		origin: ['http://localhost:3000'],
-	})
-);
+app.use(cors(corsOption));
 
 app.use('/tweets', tweetsRoute);
 app.use('/auth', authRoute);
@@ -32,5 +33,5 @@ app.use((error: ErrorRequestHandler, req: Request, res: Response, next: NextFunc
 });
 
 db.getConnection();
-const server = app.listen(config.host.port);
+const server = app.listen(config.port);
 initSocket(server);

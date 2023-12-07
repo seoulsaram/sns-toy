@@ -47,9 +47,6 @@ export async function deleteTweet(req: Request, res: Response) {
 	const id = Number(req.params?.id);
 	const tweets = await tweetRepository.getAll();
 	const isIdValid = tweets.find(t => t?.id === id);
-	console.log('isIdValid', isIdValid);
-	console.log('tweets', tweets);
-	console.log('id', id);
 	if (!isIdValid) {
 		res.status(404).json({ message: 'No post found' });
 	} else {

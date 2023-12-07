@@ -3,12 +3,6 @@ import { db } from '../db/database';
 import { findById } from './auth';
 
 type TweetType = {
-	// id: string;
-	// text: string;
-	// createdAt: string;
-	// userId: string;
-	// url?: string;
-
 	id: number;
 	text: string;
 	createdAt: string;
@@ -16,32 +10,6 @@ type TweetType = {
 	username: string;
 	name: string;
 };
-
-type TweetTypeWithUserInfo = {
-	id: string;
-	text: string;
-	createdAt: string;
-	url?: string;
-	username: string;
-	name: string;
-};
-
-// let tweets: TweetType[] = [
-// 	{
-// 		id: '1',
-// 		userId: '1701309260160',
-// 		text: '드림코딩에서 강의 들으면 너무 좋으다',
-// 		createdAt: '2021-05-09T04:20:57.000Z',
-// 		url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
-// 	},
-// 	{
-// 		id: '2',
-// 		text: '꺄아옹',
-// 		userId: '1701309260160',
-// 		createdAt: '2021-05-09T04:20:57.000Z',
-// 		url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
-// 	},
-// ];
 
 const SELECT_JOIN =
 	'SELECT tw.id, tw.text, tw.createdAt, us.username, us.name, us.url FROM tweets as tw JOIN users as us ON tw.userId=us.id';
@@ -81,6 +49,5 @@ export async function update(id: string, text: string): Promise<any> {
 
 export async function remove(id: number) {
 	const data = await db.execute('DELETE FROM tweets WHERE id=?', [id]);
-	console.log('data', data);
 	return data;
 }
