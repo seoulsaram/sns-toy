@@ -15,6 +15,7 @@ type Config = {
 		user: string;
 		database: string;
 		password: string;
+		port: number;
 	};
 	port: number;
 	corse: {
@@ -43,6 +44,7 @@ export const config: Config = {
 		user: required('DB_USER') as string,
 		database: required('DB_PROJECT') as string,
 		password: required('DB_PASSWORD') as string,
+		port: Number(required('DB_PORT', 31054)),
 	},
 	port: Number(required('PORT', 8080)),
 	corse: {
