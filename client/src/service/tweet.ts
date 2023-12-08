@@ -22,7 +22,7 @@ export default class TweetService {
 		});
 	}
 
-	async getTweet(id: string) {
+	async getTweet(id: number) {
 		return this.http.fetch(`/tweets/${id}`, {
 			method: 'GET',
 			headers: this.getHeaders(),
@@ -37,14 +37,14 @@ export default class TweetService {
 		});
 	}
 
-	async deleteTweet(tweetId: string) {
+	async deleteTweet(tweetId: number) {
 		return this.http.fetch(`/tweets/${tweetId}`, {
 			method: 'DELETE',
 			headers: this.getHeaders(),
 		});
 	}
 
-	async updateTweet(tweetId: string, text: string) {
+	async updateTweet(tweetId: number, text: string) {
 		return this.http.fetch(`/tweets/${tweetId}`, {
 			method: 'PUT',
 			headers: this.getHeaders(),

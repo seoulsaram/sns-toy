@@ -7,10 +7,10 @@ import { TweetType } from '../types/tweet.type';
 type Props = {
 	tweet: TweetType;
 	owner: boolean;
-	onDelete: (tweetId: string) => void;
-	onUpdate: (tweetId: string, text: string) => void;
+	onDelete: (tweetId: number) => void;
+	onUpdate: (tweetId: number, text: string) => void;
 	onUsernameClick: (tweet: TweetType) => void;
-	onCardClick: (tweetId: string) => void;
+	onCardClick: (tweetId: number) => void;
 };
 
 const TweetCard = memo(({ tweet, owner, onDelete, onUpdate, onUsernameClick, onCardClick }: Props) => {

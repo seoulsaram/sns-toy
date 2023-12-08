@@ -31,6 +31,8 @@ export default class HttpClient {
 
 			if (res.status === 401) {
 				this.authErrorEventBus.notify(error);
+			} else {
+				throw new Error(message);
 			}
 		}
 		return data;

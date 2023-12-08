@@ -38,13 +38,13 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 		setTweets(tweets => [tweet, ...tweets]);
 	};
 
-	const onDelete = (tweetId: string) =>
+	const onDelete = (tweetId: number) =>
 		tweetService
 			.deleteTweet(tweetId)
 			.then(() => setTweets(tweets => tweets.filter(tweet => tweet.id !== tweetId)))
 			.catch(error => onError(error.toString()));
 
-	const onUpdate = (tweetId: string, text: string) => {
+	const onUpdate = (tweetId: number, text: string) => {
 		tweetService
 			.updateTweet(tweetId, text)
 			.then(updated => setTweets(tweets => tweets.map(item => (item.id === updated.id ? updated : item))))
@@ -64,7 +64,7 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 		}, 3000);
 	};
 
-	const onCardClick = (tweetId: string) => {
+	const onCardClick = (tweetId: number) => {
 		tweetService
 			.getTweet(tweetId)
 			.then(tweet => setTweets([tweet]))

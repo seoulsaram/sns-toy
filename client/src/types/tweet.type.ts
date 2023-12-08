@@ -1,5 +1,5 @@
 export type TweetType = {
-	id: string;
+	id: number;
 	text: string;
 	createdAt: string;
 	url?: string;

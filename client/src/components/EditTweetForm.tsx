@@ -3,7 +3,7 @@ import { TweetType } from '../types/tweet.type';
 
 type Props = {
 	tweet: TweetType;
-	onUpdate: (tweetId: string, text: string) => void;
+	onUpdate: (tweetId: number, text: string) => void;
 	onClose: () => void;
 };
 
