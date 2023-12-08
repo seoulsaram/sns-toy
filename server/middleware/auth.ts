@@ -7,12 +7,12 @@ import { config } from '../config';
 const AUTH_ERROR = { message: 'Authentication Error' };
 
 export const isAuth = async (req: Request, res: Response, next: NextFunction) => {
-	const authHeader = req.get('Authorization');
-	if (!(authHeader && authHeader.startsWith('Bearer '))) {
-		return res.status(401).json(AUTH_ERROR);
-	}
+	// 1. Cookie가 있는지 체크 (for Browser)
+	// 2. Header에 있는 Auth 토큰 (for Non-Browser Client)
 
-	const token = authHeader.split(' ')[1];
+	let token: string | undefined = getToken(req);
+
+	if (!token) return res.status(401).json(AUTH_ERROR);
 
 	jwt.verify(
 		token,
@@ -22,23 +22,30 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
 			const user = await findById(decoded?.id);
 			if (!user) return res.status(401).json(AUTH_ERROR);
 			req.userId = user.id;
-			req.token = token;
+			req.token = token!;
 			next();
 		}
 	);
 };
 
 export const isOwner = async (req: Request, res: Response, next: NextFunction) => {
-	const authHeader = req.get('Authorization');
-	const token = authHeader?.split(' ')[1] ?? '';
-
+	let token: string = getToken(req)!;
+	console.log('token', token);
 	jwt.verify(
 		token,
 		config.jwt.secretKey,
 		async (_: VerifyErrors | null, decoded: string | jwt.JwtPayload['id'] | undefined) => {
 			const reqUserId = req.userId;
-			if (decoded.id !== reqUserId.toString()) return res.status(403).json(AUTH_ERROR);
+			if (decoded.id !== reqUserId) return res.status(403).json(AUTH_ERROR);
 			next();
 		}
 	);
 };
+
+function getToken(req: Request) {
+	const authHeader = req.get('Authorization');
+	if (authHeader && authHeader.startsWith('Bearer ')) {
+		return authHeader.split(' ')[1];
+	}
+	return req.cookies['token'];
+}

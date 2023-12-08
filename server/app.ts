@@ -2,6 +2,8 @@ import cors from 'cors';
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+
 import tweetsRoute from './router/tweet';
 import authRoute from './router/auth';
 import { config } from './config';
@@ -13,12 +15,14 @@ const app = express();
 const corsOption = {
 	origin: config.corse.allowedOrigin.split(','),
 	optionsSuccessStatus: 200,
+	credentials: true, //allow the Access-Control-Allow-Credentials
 };
 
 app.use(express.json());
 app.use(helmet());
 app.use(morgan('tiny'));
 app.use(cors(corsOption));
+app.use(cookieParser());
 
 app.use('/tweets', tweetsRoute);
 app.use('/auth', authRoute);
