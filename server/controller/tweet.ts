@@ -28,7 +28,7 @@ export async function postTweet(req: Request, res: Response) {
 
 export async function updateTweet(req: Request, res: Response) {
 	try {
-		const id = req.params?.id;
+		const id = Number(req.params?.id);
 		const text = req.body?.text;
 		const tweet = await tweetRepository.update(id, text);
 		if (!tweet) {

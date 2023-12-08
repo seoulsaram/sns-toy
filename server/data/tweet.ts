@@ -28,10 +28,6 @@ export const Tweet = sequelize.define<TweetType>('tweet', {
 // 관계 정의해줌. 알아서 FK를 만들어준다. 때문에 userId필드를 명시해주지 않음.
 Tweet.belongsTo(User);
 
-const SELECT_JOIN =
-	'SELECT tw.id, tw.text, tw.createdAt, us.username, us.name, us.url FROM tweets as tw JOIN users as us ON tw.userId=us.id';
-// const ORDER_DESC = 'ORDER BY tw.createdAt DESC';
-
 const INCLUDE_USER: FindOptions = {
 	attributes: [
 		'id',
@@ -86,7 +82,7 @@ export async function create(text: string, userId: string): Promise<TweetType | 
 	return created;
 }
 
-export async function update(id: string, text: string): Promise<TweetType | null> {
+export async function update(id: number, text: string): Promise<TweetType | null> {
 	const res = await Tweet.findByPk(id, INCLUDE_USER);
 	if (!res) {
 		throw new Error();
