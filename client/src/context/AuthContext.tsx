@@ -47,7 +47,7 @@ const AuthContext = createContext<{
 	},
 });
 
-const contextRef = createRef();
+const tokenRef: React.RefObject<string | undefined> = createRef();
 
 type Props = {
 	authService: AuthService;
@@ -56,9 +56,8 @@ type Props = {
 };
 export function AuthProvider({ authService, authErrorEventBus, children }: Props) {
 	const [user, setUser] = useState<User | undefined>(undefined);
-	const [username, setUserName] = useState('');
 
-	useImperativeHandle(contextRef, () => (user ? user?.token : undefined));
+	useImperativeHandle(tokenRef, () => (user ? user?.token : undefined));
 
 	useEffect(() => {
 		authErrorEventBus.listen(() => {
@@ -97,5 +96,5 @@ export function AuthProvider({ authService, authErrorEventBus, children }: Props
 }
 
 export default AuthContext;
-export const fetchToken = () => contextRef.current;
+export const fetchToken = () => tokenRef.current;
 export const useAuth = () => useContext(AuthContext);

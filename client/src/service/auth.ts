@@ -1,13 +1,10 @@
-import TokenStorage from '../db/token';
 import HttpClient from '../network/http';
 
 export default class AuthService {
 	private http: HttpClient;
-	private tokenStorage: TokenStorage;
 
-	constructor(http: HttpClient, tokenStorage: TokenStorage) {
+	constructor(http: HttpClient) {
 		this.http = http;
-		this.tokenStorage = tokenStorage;
 	}
 
 	async signup(username: string, password: string, name: string, email: string, url?: string) {
@@ -21,7 +18,6 @@ export default class AuthService {
 				url,
 			}),
 		});
-		this.tokenStorage.saveToken(data.token);
 		return data;
 	}
 
@@ -30,19 +26,18 @@ export default class AuthService {
 			method: 'POST',
 			body: JSON.stringify({ username, password }),
 		});
-		this.tokenStorage.saveToken(data.token);
 		return data;
 	}
 
 	async me() {
-		const token = this.tokenStorage.getToken();
 		return this.http.fetch('/auth/me', {
 			method: 'GET',
-			headers: { Authorization: `Bearer ${token}` },
 		});
 	}
 
 	async logout() {
-		this.tokenStorage.clearToken();
+		return this.http.fetch('/auth/logout', {
+			method: 'POST',
+		});
 	}
 }

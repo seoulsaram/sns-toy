@@ -16,6 +16,7 @@ export default class HttpClient {
 				'Content-Type': 'application/json',
 				...options?.headers,
 			},
+			credentials: 'include', // 쿠키에 있는 정보를 자동으로 포함해서 요청하게 하는 옵션
 		});
 		let data;
 

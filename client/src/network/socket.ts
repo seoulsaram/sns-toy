@@ -3,7 +3,7 @@ import { TweetType } from '../types/tweet.type';
 
 export default class SocketClient {
 	private io: SocketIO;
-	constructor(baseURL: string, getAccessToken: () => string | null) {
+	constructor(baseURL: string, getAccessToken: () => string | null | undefined) {
 		this.io = io(baseURL, {
 			auth: cb => cb({ token: getAccessToken() }),
 		});
