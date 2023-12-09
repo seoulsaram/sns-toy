@@ -16,9 +16,9 @@ export default class HttpClient {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
-				withCredentials: true,
 			},
 		});
+		this.client.defaults.withCredentials = true;
 		axiosRetry(this.client, {
 			retries: config.retries,
 			retryDelay: retryCount => {
