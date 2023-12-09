@@ -48,6 +48,7 @@ const AuthContext = createContext<{
 });
 
 const tokenRef: React.RefObject<string | undefined> = createRef();
+const csrfRef: React.RefObject<string | undefined> = createRef();
 
 type Props = {
 	authService: AuthService;
@@ -56,8 +57,14 @@ type Props = {
 };
 export function AuthProvider({ authService, authErrorEventBus, children }: Props) {
 	const [user, setUser] = useState<User | undefined>(undefined);
+	const [csrfToken, setCsrfToken] = useState<string | undefined>(undefined);
 
 	useImperativeHandle(tokenRef, () => (user ? user?.token : undefined));
+	useImperativeHandle(csrfRef, () => csrfToken);
+
+	useEffect(() => {
+		authService.csrfToken().then(setCsrfToken).catch(console.error);
+	}, [authService]);
 
 	useEffect(() => {
 		authErrorEventBus.listen(() => {
@@ -97,4 +104,5 @@ export function AuthProvider({ authService, authErrorEventBus, children }: Props
 
 export default AuthContext;
 export const fetchToken = () => tokenRef.current;
+export const fetchCsrfToken = () => csrfRef.current;
 export const useAuth = () => useContext(AuthContext);
