@@ -1,44 +1,56 @@
-import AuthError from '../types/errors/authError.type';
-import AuthErrorEventBus from '../util/authErrorEventBus';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axiosRetry from 'axios-retry';
 
+const defaultRetryConfig = {
+	retries: 3,
+	initialDelayMs: 100,
+};
 export default class HttpClient {
-	private baseURL: string;
-	private authErrorEventBus: AuthErrorEventBus;
 	private getCsrfToken: () => string | null | undefined;
-	constructor(baseURL: string, authErrorEventBus: AuthErrorEventBus, getCsrfToken: () => string | null | undefined) {
-		this.baseURL = baseURL;
-		this.authErrorEventBus = authErrorEventBus;
+	private client: AxiosInstance;
+
+	constructor(baseURL: string, getCsrfToken: () => string | null | undefined, config = defaultRetryConfig) {
 		this.getCsrfToken = getCsrfToken;
+		this.client = axios.create({
+			baseURL,
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				withCredentials: true,
+			},
+		});
+		axiosRetry(this.client, {
+			retries: config.retries,
+			retryDelay: retryCount => {
+				const delay = 2 ** retryCount * config.initialDelayMs;
+				const jitter = delay * 0.1 * Math.random();
+				return delay + jitter;
+			},
+			retryCondition: err => axiosRetry.isNetworkOrIdempotentRequestError(err) || err?.response?.status === 429,
+		});
 	}
 
-	async fetch(url: string, options?: RequestInit) {
-		const res = await fetch(`${this.baseURL}${url}`, {
-			...options,
+	async fetch(url: string, options?: AxiosRequestConfig & { body?: any }) {
+		const request: AxiosRequestConfig = {
+			url,
+			method: options?.method,
 			headers: {
-				'Content-Type': 'application/json',
 				...options?.headers,
 				'_dwitter-csrf-token': this.getCsrfToken() ?? '',
 			},
-			credentials: 'include', // 쿠키에 있는 정보를 자동으로 포함해서 요청하게 하는 옵션
-		});
-		let data;
+			data: options?.body,
+		};
 
 		try {
-			data = await res.json();
-		} catch (error) {
-			console.error('error', error);
-		}
-
-		if (res.status > 299 || res.status < 200) {
-			const message = data && data.message ? data.message : 'Something went wrong!';
-			const error = new AuthError({ name: 'AUTH_ERROR', message, cause: new Error() });
-
-			if (res.status === 401) {
-				this.authErrorEventBus.notify(error);
-			} else {
+			const res = await this.client(request);
+			return res.data;
+		} catch (err: any) {
+			if (err?.response) {
+				const data = err.response?.data;
+				const message = data && data.message ? data.message : 'Something went wrong!';
 				throw new Error(message);
 			}
+			throw new Error('connection error');
 		}
-		return data;
 	}
 }

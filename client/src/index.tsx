@@ -11,9 +11,14 @@ import HttpClient from './network/http';
 import AuthErrorEventBus from './util/authErrorEventBus';
 import SocketClient from './network/socket';
 
+const config = {
+	retries: !process.env.REACT_APP_REQUEST_RETRY_COUNT ? 3 : Number(process.env.REACT_APP_REQUEST_RETRY_COUNT),
+	initialDelayMs: !process.env.REACT_APP_REQUEST_DELAY_MS ? 5 : Number(process.env.REACT_APP_REQUEST_DELAY_MS),
+};
+
 const baseURL = process.env.REACT_APP_BASE_URL ?? '';
 const authErrorEventBus = new AuthErrorEventBus();
-const httpClient = new HttpClient(baseURL ?? '', authErrorEventBus, () => fetchCsrfToken());
+const httpClient = new HttpClient(baseURL ?? '', () => fetchCsrfToken(), config);
 const authService = new AuthService(httpClient);
 const socketClient = new SocketClient(baseURL, () => fetchToken());
 const tweetService = new TweetService(httpClient, socketClient);
