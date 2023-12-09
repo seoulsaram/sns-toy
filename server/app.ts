@@ -10,6 +10,7 @@ import { config } from './config';
 import { initSocket } from './connection/socket';
 import { sequelize } from './db/database';
 import { csrfCheck } from './middleware/csrf';
+import rateLimiter from './middleware/rate-limiter';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(morgan('tiny'));
 app.use(cors(corsOption));
 app.use(cookieParser());
 app.use(csrfCheck);
+app.use(rateLimiter);
 
 app.use('/tweets', tweetsRoute);
 app.use('/auth', authRoute);

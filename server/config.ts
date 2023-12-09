@@ -24,6 +24,10 @@ type Config = {
 	csrf: {
 		plainToken: string;
 	};
+	rateLimit: {
+		windowMS: number;
+		max: number;
+	};
 };
 
 function required(key: string, defaultValue?: number | string) {
@@ -55,5 +59,9 @@ export const config: Config = {
 	},
 	csrf: {
 		plainToken: required('CSRF_SECRET_KEY') as string,
+	},
+	rateLimit: {
+		windowMS: Number(required('RATE_LIMIT_WINDOW_MS', 60000)),
+		max: Number(required('RATE_LIMIT_MAX', 100)),
 	},
 };
