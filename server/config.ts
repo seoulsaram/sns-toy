@@ -18,8 +18,11 @@ type Config = {
 		port: number;
 	};
 	port: number;
-	corse: {
+	cors: {
 		allowedOrigin: string;
+	};
+	csrf: {
+		plainToken: string;
 	};
 };
 
@@ -47,7 +50,10 @@ export const config: Config = {
 		port: Number(required('DB_PORT', 31054)),
 	},
 	port: Number(required('PORT', 8080)),
-	corse: {
+	cors: {
 		allowedOrigin: required('CORS_ALLOW_ORIGIN') as string,
+	},
+	csrf: {
+		plainToken: required('CSRF_SECRET_KEY') as string,
 	},
 };

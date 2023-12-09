@@ -38,9 +38,17 @@ export async function login(req: Request, res: Response) {
 }
 
 export async function logout(req: Request, res: Response) {
-	console.log('hihi');
 	setToken(res, '');
 	res.status(200).json({ message: 'User has been logged out' });
+}
+
+export async function csrfToken(req: Request, res: Response) {
+	const csrfToken = await generateCSRFToken();
+	res.status(200).json({ csrfToken });
+}
+
+async function generateCSRFToken() {
+	return bcrypt.hash(config.csrf.plainToken, 1);
 }
 
 function createJwtToken(id: string) {

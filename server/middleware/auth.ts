@@ -30,7 +30,6 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
 
 export const isOwner = async (req: Request, res: Response, next: NextFunction) => {
 	let token: string = getToken(req)!;
-	console.log('token', token);
 	jwt.verify(
 		token,
 		config.jwt.secretKey,

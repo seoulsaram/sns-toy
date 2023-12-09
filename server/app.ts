@@ -9,11 +9,12 @@ import authRoute from './router/auth';
 import { config } from './config';
 import { initSocket } from './connection/socket';
 import { sequelize } from './db/database';
+import { csrfCheck } from './middleware/csrf';
 
 const app = express();
 
 const corsOption = {
-	origin: config.corse.allowedOrigin.split(','),
+	origin: config.cors.allowedOrigin.split(','),
 	optionsSuccessStatus: 200,
 	credentials: true, //allow the Access-Control-Allow-Credentials
 };
@@ -23,6 +24,7 @@ app.use(helmet());
 app.use(morgan('tiny'));
 app.use(cors(corsOption));
 app.use(cookieParser());
+app.use(csrfCheck);
 
 app.use('/tweets', tweetsRoute);
 app.use('/auth', authRoute);
