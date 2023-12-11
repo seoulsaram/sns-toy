@@ -8,7 +8,9 @@ const defaultRetryConfig = {
 };
 export default class HttpClient {
 	private getCsrfToken: () => string | null | undefined;
+	private getAccessToken: () => string | null | undefined;
 	private client: AxiosInstance;
+	private isWeb: boolean;
 
 	constructor(
 		baseURL: string,
@@ -26,10 +28,8 @@ export default class HttpClient {
 			},
 		});
 		this.client.defaults.withCredentials = true;
-
-		if (!isWeb) {
-			this.client.defaults.headers.Authorization = getAccessToken() as string;
-		}
+		this.getAccessToken = getAccessToken;
+		this.isWeb = isWeb;
 
 		axiosRetry(this.client, {
 			retries: config.retries,
@@ -52,6 +52,10 @@ export default class HttpClient {
 			},
 			data: options?.body,
 		};
+
+		if (!this.isWeb) {
+			this.client.defaults.headers.Authorization = `Bearer ${this.getAccessToken()}`;
+		}
 
 		try {
 			const res = await this.client(request);
