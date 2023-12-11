@@ -36,7 +36,7 @@ export default class HttpClient {
 			method: options?.method,
 			headers: {
 				...options?.headers,
-				'_dwitter-csrf-token': this.getCsrfToken() ?? '',
+				'dwitter-csrf-token': this.getCsrfToken() ?? '',
 			},
 			data: options?.body,
 		};

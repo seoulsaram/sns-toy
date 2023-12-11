@@ -17,7 +17,7 @@ export default class HttpClient {
 			headers: {
 				'Content-Type': 'application/json',
 				...options?.headers,
-				'_dwitter-csrf-token': this.getCsrfToken() ?? '',
+				'dwitter-csrf-token': this.getCsrfToken() ?? '',
 			},
 			credentials: 'include', // 쿠키에 있는 정보를 자동으로 포함해서 요청하게 하는 옵션
 		});
