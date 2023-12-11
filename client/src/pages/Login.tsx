@@ -1,8 +1,12 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Box, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
+
 import Banner from '../components/Banner';
 import { LoginType, SignUpType } from '../context/AuthContext';
 
 const Login = ({ onSignUp, onLogin }: { onSignUp: SignUpType; onLogin: LoginType }) => {
+	const navigate = useNavigate();
 	const [signup, setSignup] = useState(false);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -17,7 +21,9 @@ const Login = ({ onSignUp, onLogin }: { onSignUp: SignUpType; onLogin: LoginType
 		if (signup) {
 			onSignUp(username, password, name, email, url).catch(setError);
 		} else {
-			onLogin(username, password).catch(setError);
+			onLogin(username, password)
+				.then(() => navigate('/'))
+				.catch(setError);
 		}
 	};
 
@@ -53,62 +59,70 @@ const Login = ({ onSignUp, onLogin }: { onSignUp: SignUpType; onLogin: LoginType
 		<>
 			<Banner text={text} isAlert={isAlert} />
 			<form className="auth-form" onSubmit={onSubmit}>
-				<input
+				<TextField
 					name="username"
 					type="text"
 					placeholder="Id"
 					value={username}
 					onChange={onChange}
-					className="form-input"
+					label="Id"
+					variant="outlined"
 					required
 				/>
-				<input
+				<TextField
 					name="password"
 					type="password"
 					placeholder="Password"
 					value={password}
-					className="form-input"
 					onChange={onChange}
+					label="Password"
+					variant="outlined"
 				/>
+
 				{signup && (
-					<input
+					<TextField
 						name="name"
 						type="text"
 						placeholder="Name"
 						value={name}
 						onChange={onChange}
-						className="form-input"
-						required
+						label="Name"
+						variant="outlined"
 					/>
 				)}
 				{signup && (
-					<input
+					<TextField
 						name="email"
 						type="email"
 						placeholder="Email"
 						value={email}
 						onChange={onChange}
-						className="form-input"
-						required
+						label="Email"
+						variant="outlined"
 					/>
 				)}
 				{signup && (
-					<input
+					<TextField
 						name="url"
 						type="url"
 						placeholder="Profile Image URL"
 						value={url}
 						onChange={onChange}
-						className="form-input"
+						label="Profile Image URL"
+						variant="outlined"
 					/>
 				)}
 				<div className="form-signup">
-					<input name="signup" id="signup" type="checkbox" onChange={onChange} checked={signup} />
-					<label htmlFor="signup"> Create a new account?</label>
+					<FormControlLabel
+						name="signup"
+						id="signup"
+						control={<Checkbox onChange={onChange} checked={signup} />}
+						label="Create a new account?"
+					/>
 				</div>
-				<button className="form-btn auth-form-btn" type="submit">
+				<Button variant="contained" type="submit">
 					{signup ? 'Sign Up' : 'Sign In'}
-				</button>
+				</Button>
 			</form>
 		</>
 	);

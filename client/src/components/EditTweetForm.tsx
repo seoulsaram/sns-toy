@@ -1,4 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { Button, TextField } from '@mui/material';
 import { TweetType } from '../types/tweet.type';
 
 type Props = {
@@ -22,21 +23,24 @@ const EditTweetForm = ({ tweet, onUpdate, onClose }: Props) => {
 
 	return (
 		<form className="edit-tweet-form" onSubmit={onSubmit}>
-			<input
+			<TextField
 				type="text"
-				placeholder="Edit your tweet"
+				fullWidth
+				placeholder="Edit your talk"
 				value={text}
-				required
 				onChange={onChange}
-				className="form-input tweet-input"
+				size="small"
+				variant="outlined"
+				required
 			/>
+
 			<div className="edit-tweet-form-action">
-				<button type="submit" className="form-btn-update">
+				<Button variant="contained" size="small" type="submit" className="form-btn-update">
 					Update
-				</button>
-				<button type="button" className="form-btn-cancel" onClick={onClose}>
+				</Button>
+				<Button variant="contained" size="small" color="secondary" type="button" onClick={onClose}>
 					Cancel
-				</button>
+				</Button>
 			</div>
 		</form>
 	);

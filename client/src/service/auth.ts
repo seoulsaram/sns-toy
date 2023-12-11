@@ -35,6 +35,13 @@ export default class AuthService {
 		});
 	}
 
+	async changeProfile(url: string) {
+		return this.http.fetch('/auth/url', {
+			method: 'PATCH',
+			body: { url },
+		});
+	}
+
 	async logout() {
 		return this.http.fetch('/auth/logout', {
 			method: 'POST',

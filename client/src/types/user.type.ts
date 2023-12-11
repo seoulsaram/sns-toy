@@ -4,6 +4,6 @@ export type User = {
 	// password: string; // 사용자 비밀번호
 	// name: string; // 사용자 이름
 	// email: string; // 사용자 이메일
-	// url?: string;
+	url?: string;
 	token: string;
 };

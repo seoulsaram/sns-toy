@@ -1,6 +1,7 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import socket from 'socket.io-client';
+import { ThemeProvider } from '@mui/material';
 
 import './index.css';
 import App from './App';
@@ -10,6 +11,7 @@ import { AuthProvider, fetchCsrfToken, fetchToken } from './context/AuthContext'
 import HttpClient from './network/http';
 import AuthErrorEventBus from './util/authErrorEventBus';
 import SocketClient from './network/socket';
+import { theme } from './theme/theme';
 
 const config = {
 	retries: !process.env.REACT_APP_REQUEST_RETRY_COUNT ? 3 : Number(process.env.REACT_APP_REQUEST_RETRY_COUNT),
@@ -33,7 +35,9 @@ socketIO.on('tweets', meg => console.log(meg));
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
 		<AuthProvider authService={authService} authErrorEventBus={authErrorEventBus}>
-			<App tweetService={tweetService} />
+			<ThemeProvider theme={theme}>
+				<App tweetService={tweetService} authService={authService} />
+			</ThemeProvider>
 		</AuthProvider>
 	</React.StrictMode>,
 );

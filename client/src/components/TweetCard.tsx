@@ -20,9 +20,6 @@ const TweetCard = memo(({ tweet, owner, onDelete, onUpdate, onUsernameClick, onC
 
 	return (
 		<li className="tweet" style={{ cursor: 'pointer' }}>
-			<button style={{ background: 'black' }} onClick={() => onCardClick(id)}>
-				go to detail
-			</button>
 			<span className="tweet-container">
 				<Avatar url={url} name={name} />
 				<div className="tweet-body">
@@ -31,8 +28,14 @@ const TweetCard = memo(({ tweet, owner, onDelete, onUpdate, onUsernameClick, onC
 						@{username}
 					</button>
 					<span className="tweet-date"> · {parseDate(createdAt)}</span>
-					<p>{text}</p>
-					{editing && <EditTweetForm tweet={tweet} onUpdate={onUpdate} onClose={onClose} />}
+
+					{editing ? (
+						<EditTweetForm tweet={tweet} onUpdate={onUpdate} onClose={onClose} />
+					) : (
+						<button className="tweet-detail-btn" onClick={() => onCardClick(id)}>
+							{text}
+						</button>
+					)}
 				</div>
 			</span>
 			{owner && (

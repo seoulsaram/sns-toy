@@ -72,10 +72,6 @@ export function AuthProvider({ authService, authErrorEventBus, children }: Props
 		});
 	}, [authErrorEventBus]);
 
-	useEffect(() => {
-		authService.me().then(setUser).catch(console.error);
-	}, [authService]);
-
 	const signUp = useCallback(
 		async (username: string, password: string, name: string, email: string, url?: string) =>
 			authService.signup(username, password, name, email, url).then(user => setUser(user)),
@@ -87,6 +83,14 @@ export function AuthProvider({ authService, authErrorEventBus, children }: Props
 		[authService],
 	);
 
+	const me = useCallback(() => {
+		return authService.me();
+	}, [authService]);
+
+	useEffect(() => {
+		me().then(setUser).catch(console.error);
+	}, [me]);
+
 	const logout = useCallback(async () => authService.logout().then(() => setUser(undefined)), [authService]);
 
 	const context = useMemo(
@@ -95,8 +99,9 @@ export function AuthProvider({ authService, authErrorEventBus, children }: Props
 			signUp,
 			logIn,
 			logout,
+			me,
 		}),
-		[user, signUp, logIn, logout],
+		[user, signUp, logIn, logout, me],
 	);
 
 	return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>;

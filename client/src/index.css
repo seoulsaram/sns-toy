@@ -10,20 +10,28 @@
 	--color-yellow: #fff6b0;
 	--color-shadow: rgba(0, 0, 0, 0.2);
 	--size-avatar: 38px;
+
+	--color-main-1: #030603;
+	--color-main-2: #dbf487;
+	--color-secondary: #ede9e0;
+	--color-green: #1a3d21;
 }
 
 body {
 	margin: 0;
+	padding: 0;
 	/* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
 		'Droid Sans', 'Helvetica Neue', sans-serif; */
 	font-family: 'Roboto';
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background: var(--color-darkBlue);
 	display: flex;
 	justify-content: center;
-	margin: 0;
 	color: var(--color-white);
+	background-color: #9fb162;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1200 800'%3E%3Cdefs%3E%3CradialGradient id='a' cx='0' cy='800' r='800' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%234c7c39'/%3E%3Cstop offset='1' stop-color='%234c7c39' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='b' cx='1200' cy='800' r='800' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23425f2f'/%3E%3Cstop offset='1' stop-color='%23425f2f' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='c' cx='600' cy='0' r='600' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%230f2111'/%3E%3Cstop offset='1' stop-color='%230f2111' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='d' cx='600' cy='800' r='600' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%239FB162'/%3E%3Cstop offset='1' stop-color='%239FB162' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='e' cx='0' cy='0' r='800' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%231A3D21'/%3E%3Cstop offset='1' stop-color='%231A3D21' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='f' cx='1200' cy='0' r='800' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23030603'/%3E%3Cstop offset='1' stop-color='%23030603' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='1200' height='800'/%3E%3Crect fill='url(%23b)' width='1200' height='800'/%3E%3Crect fill='url(%23c)' width='1200' height='800'/%3E%3Crect fill='url(%23d)' width='1200' height='800'/%3E%3Crect fill='url(%23e)' width='1200' height='800'/%3E%3Crect fill='url(%23f)' width='1200' height='800'/%3E%3C/svg%3E");
+	background-attachment: fixed;
+	background-size: cover;
 }
 
 code {
@@ -32,6 +40,7 @@ code {
 
 * {
 	box-sizing: border-box;
+	transition: 0.2s ease-in-out;
 }
 
 button {
@@ -50,32 +59,50 @@ button {
 	display: flex;
 	flex-direction: column;
 	box-shadow:
-		0 5px 30px 0 rgb(0 0 0 / 20%),
-		0 5px 20px 0 rgb(0 0 0 / 19%);
-	background-color: #ffffff;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='1' y2='0' gradientTransform='rotate(0,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%230FF'/%3E%3Cstop offset='1' stop-color='%23CF6'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' x2='0' y1='0' y2='1' gradientTransform='rotate(0,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%23F00'/%3E%3Cstop offset='1' stop-color='%23FC0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='%23FFF' fill-opacity='0' stroke-miterlimit='10'%3E%3Cg stroke='url(%23a)' stroke-width='66'%3E%3Cpath transform='translate(-130.2 18) rotate(8.1 1409 581) scale(0.9988420000000001)' d='M1409 581 1450.35 511 1490 581z'/%3E%3Ccircle stroke-width='22' transform='translate(-118.5 87) rotate(15.600000000000001 800 450) scale(1.02267)' cx='500' cy='100' r='40'/%3E%3Cpath transform='translate(44.7 -166.5) rotate(145.5 401 736) scale(1.02267)' d='M400.86 735.5h-83.73c0-23.12 18.74-41.87 41.87-41.87S400.86 712.38 400.86 735.5z'/%3E%3C/g%3E%3Cg stroke='url(%23b)' stroke-width='20'%3E%3Cpath transform='translate(522 -13.799999999999999) rotate(3.4499999999999997 150 345) scale(0.953614)' d='M149.8 345.2 118.4 389.8 149.8 434.4 181.2 389.8z'/%3E%3Crect stroke-width='44' transform='translate(-232.5 -228) rotate(162 1089 759)' x='1039' y='709' width='100' height='100'/%3E%3Cpath transform='translate(-404.4 123.6) rotate(27 1400 132) scale(0.895)' d='M1426.8 132.4 1405.7 168.8 1363.7 168.8 1342.7 132.4 1363.7 96 1405.7 96z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-	background-attachment: fixed;
-	background-size: cover;
+		rgba(0, 0, 33, 0.07) 0px 16px 22.4px 4.8px,
+		rgba(0, 0, 33, 0.05) 0px 3.2px 16px 0px,
+		rgba(0, 0, 33, 0.07) 0px 0px 1px 0px;
 }
 
 .header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background-color: var(--color-black);
 	padding: 8px;
+	margin-bottom: 16px;
+	border-bottom-left-radius: 32px;
+	border-bottom-right-radius: 32px;
+	background-color: var(--color-main-1);
+	box-shadow:
+		rgba(0, 0, 33, 0.07) 0px 16px 22.4px 4.8px,
+		rgba(0, 0, 33, 0.05) 0px 3.2px 16px 0px,
+		rgba(0, 0, 33, 0.07) 0px 0px 1px 0px;
+}
+
+.header:hover {
+	-webkit-transform: translate3D(0, -3%, 0);
+	-moz-transform: translate3D(0, -3%, 0);
+	-ms-transform: translate3D(0, -3%, 0);
+	transform: translate3D(0, -3%, 0);
+}
+
+.header-welcome {
+	color: var(--color-main-2);
 }
 
 .logo {
 	display: flex;
 	justify-content: space-between;
+	gap: 16px;
 	align-items: center;
 	cursor: pointer;
 }
 
 .logo-img {
-	width: 32px;
-	height: 32px;
+	width: 64px;
+	height: 64px;
+	/* width: 32px;
+	height: 32px; */
 }
 
 .logo-name {
@@ -84,13 +111,16 @@ button {
 }
 
 .logo-user {
-	font-size: 0.7rem;
-	color: var(--color-blue);
+	font-size: 0.8rem;
+	color: var(--color-main-2);
+	font-weight: 500;
 	padding-top: 8px;
 }
 
 .menu {
 	color: var(--color-white);
+	display: flex;
+	align-items: center;
 }
 
 .menu-item {
@@ -116,32 +146,9 @@ button {
 .auth-form {
 	display: flex;
 	flex-direction: column;
+	gap: 8px;
 	color: var(--color-black);
 	padding: 16px 32px;
-}
-
-.form-btn {
-	font-size: 1.2rem;
-	background: var(--color-blue);
-	font-weight: bold;
-	padding: 4px;
-}
-
-.form-btn-small {
-	font-size: 0.8rem;
-}
-
-.auth-form-btn {
-	margin: 16px;
-}
-
-.form-input {
-	font-size: 1rem;
-	margin: 4px 0;
-}
-
-.form-input:focus {
-	outline: 2px dotted var(--color-blue);
 }
 
 .form-signup {
@@ -149,7 +156,7 @@ button {
 }
 
 .tweets {
-	height: 100%;
+	height: calc(100vh - (158px));
 	overflow-y: auto;
 	color: var(--color-black);
 	padding: 16px;
@@ -157,7 +164,7 @@ button {
 	/* Firefox */
 	scrollbar-width: 6px;
 	scrollbar-color: var(--color-darkGrey);
-	scrollbar-face-color: var(--color-blue);
+	scrollbar-face-color: var(--color-main-1);
 }
 
 .tweets::-webkit-scrollbar {
@@ -168,7 +175,7 @@ button {
 
 .tweets::-webkit-scrollbar-thumb {
 	/* Safari and Chrome */
-	background-color: var(--color-blue);
+	background-color: var(--color-main-1);
 }
 
 .tweets-empty {
@@ -185,6 +192,7 @@ button {
 	padding: 8px;
 	display: flex;
 	justify-content: space-between;
+	border-radius: 8px;
 }
 
 .tweet:hover {
@@ -193,24 +201,21 @@ button {
 
 .tweet-container {
 	display: flex;
-	width: 100%;
+	width: calc(100% - 30px);
 }
 
 .avatar-img {
-	width: var(--size-avatar);
-	height: var(--size-avatar);
 	border-radius: 50%;
 }
 
 .avatar-txt {
-	width: var(--size-avatar);
-	height: var(--size-avatar);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background-color: var(--color-grey);
 	border-radius: 50%;
-	text-align: center;
 	font-size: 1.5rem;
 	font-weight: bold;
-	line-height: var(--size-avatar);
 }
 .tweet-body {
 	margin: 0px 8px;
@@ -226,7 +231,7 @@ button {
 .tweet-date {
 	font-size: 0.7rem;
 	margin-left: 4px;
-	color: var(--color-blue);
+	color: var(--color-main-1);
 	font-weight: bold;
 }
 
@@ -243,11 +248,23 @@ button {
 	color: var(--color-darkGrey);
 }
 
+.tweet-detail-btn {
+	display: block;
+	width: 100%;
+	width: calc(100% - 40px);
+	text-align: left;
+	padding: 8px 0 0 0;
+	font-size: 1rem;
+	word-wrap: break-word;
+	color: var(--color-black);
+}
+
 .tweet-form {
 	display: flex;
+	gap: 8px;
 	width: 100%;
 	padding: 4px 16px;
-	background-color: var(--color-grey);
+	/* background-color: var(--color-grey); */
 }
 
 .tweet-input {
@@ -264,7 +281,7 @@ button {
 .tweet-action-btn {
 	font-size: 1.1rem;
 	font-weight: bold;
-	color: var(--color-blue);
+	color: var(--color-main-1);
 	transition: transform 300ms;
 }
 
@@ -272,19 +289,53 @@ button {
 	transform: scale(1.5);
 }
 
+.edit-tweet-form {
+	padding-top: 8px;
+}
+
 .edit-tweet-form-action {
-	float: right;
-	margin-top: 4px;
+	display: flex;
+	gap: 8px;
+	justify-content: right;
+	margin-top: 8px;
 }
 
 .form-btn-update,
 .form-btn-cancel {
 	font-size: 0.8rem;
-	background: var(--color-blue);
+	background: var(--color-main-1);
 	font-weight: bold;
 	padding: 4px;
 }
 .form-btn-cancel {
 	margin-left: 8px;
 	background: var(--color-red);
+}
+
+.user-preview {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	margin: 8px 0;
+}
+
+.user-name {
+	color: var(--color-black);
+	text-align: center;
+}
+
+.info {
+	color: var(--color-black);
+	padding: 0 20px;
+}
+
+.info a {
+	color: var(--color-main-1);
+}
+
+.info a:visited,
+.info a:hover {
+	color: var(--color-green);
 }

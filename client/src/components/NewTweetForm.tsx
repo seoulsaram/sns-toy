@@ -1,4 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { Button, TextField } from '@mui/material';
 
 import TweetService from '../service/tweet';
 import { TweetType } from '../types/tweet.type';
@@ -28,17 +29,19 @@ const NewTweetForm = ({ tweetService, onError, onCreated }: Props) => {
 
 	return (
 		<form className="tweet-form" onSubmit={onSubmit}>
-			<input
+			<TextField
 				type="text"
-				placeholder="Edit your tweet"
+				fullWidth
+				placeholder="Post your talk"
 				value={tweet}
-				required
 				onChange={onChange}
-				className="form-input tweet-input"
+				size="small"
+				variant="outlined"
+				required
 			/>
-			<button type="submit" className="form-btn">
+			<Button variant="contained" type="submit">
 				Post
-			</button>
+			</Button>
 		</form>
 	);
 };

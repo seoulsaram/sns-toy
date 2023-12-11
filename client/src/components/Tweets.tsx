@@ -9,11 +9,10 @@ import { TweetType } from '../types/tweet.type';
 
 type Props = {
 	tweetService: TweetService;
-	username: string;
 	addable: boolean;
 };
 
-const Tweets = memo(({ tweetService, username, addable }: Props) => {
+const Tweets = memo(({ tweetService, addable }: Props) => {
 	const [tweets, setTweets] = useState<TweetType[]>([]);
 	const [error, setError] = useState('');
 	const navigate = useNavigate();
@@ -72,10 +71,10 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 	};
 
 	return (
-		<>
+		<div>
 			{addable && <NewTweetForm tweetService={tweetService} onError={onError} onCreated={onCreated} />}
 			{error && <Banner text={error} isAlert />}
-			{tweets.length === 0 && <p className="tweets-empty">No Tweets Yet</p>}
+			{tweets.length === 0 && <p className="tweets-empty">No Talks Yet</p>}
 			<ul className="tweets">
 				{tweets.map(tweet => (
 					<TweetCard
@@ -89,7 +88,7 @@ const Tweets = memo(({ tweetService, username, addable }: Props) => {
 					/>
 				))}
 			</ul>
-		</>
+		</div>
 	);
 });
 export default Tweets;

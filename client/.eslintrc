@@ -45,14 +45,14 @@
 				"labelAttributes": ["htmlFor"]
 			}
 		],
-		"import/no-extraneous-dependencies": [
-			"error",
-			{
-				"devDependencies": true,
-				"optionalDependencies": false,
-				"peerDependencies": false
-			}
-		],
+		// "import/no-extraneous-dependencies": [
+		// 	"error",
+		// 	{
+		// 		"devDependencies": true,
+		// 		"optionalDependencies": false,
+		// 		"peerDependencies": false
+		// 	}
+		// ],
 		"react/jsx-uses-react": "error",
 		"react/jsx-uses-vars": "error",
 		"react/jsx-props-no-spreading": "off",
