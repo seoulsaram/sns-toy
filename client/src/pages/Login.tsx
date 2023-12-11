@@ -15,11 +15,15 @@ const Login = ({ onSignUp, onLogin }: { onSignUp: SignUpType; onLogin: LoginType
 	const [url, setURL] = useState('');
 	const [text, setText] = useState('');
 	const [isAlert, setIsAlert] = useState(false);
+	const [disabled, setDisabled] = useState(false);
 
 	const onSubmit = (event: FormEvent) => {
 		event.preventDefault();
 		if (signup) {
-			onSignUp(username, password, name, email, url).catch(setError);
+			setDisabled(true);
+			onSignUp(username, password, name, email, url)
+				.then(() => setDisabled(false))
+				.catch(setError);
 		} else {
 			onLogin(username, password)
 				.then(() => navigate('/'))
@@ -31,6 +35,7 @@ const Login = ({ onSignUp, onLogin }: { onSignUp: SignUpType; onLogin: LoginType
 	const setError = (error: string) => {
 		setText(error.toString());
 		setIsAlert(true);
+		setDisabled(false);
 	};
 
 	const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -120,7 +125,7 @@ const Login = ({ onSignUp, onLogin }: { onSignUp: SignUpType; onLogin: LoginType
 						label="Create a new account?"
 					/>
 				</div>
-				<Button variant="contained" type="submit">
+				<Button variant="contained" type="submit" disabled={disabled}>
 					{signup ? 'Sign Up' : 'Sign In'}
 				</Button>
 			</form>
