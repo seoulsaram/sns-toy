@@ -8,16 +8,16 @@ export const csrfCheck = (req: Request, res: Response, next: NextFunction) => {
 		return next();
 	}
 
-	const csrfHeader = req.get('_dwitter-csrf-token');
+	const csrfHeader = req.get('dwitter-csrf-token');
 	if (!csrfHeader) {
-		console.warn('Missing required "_dwitter-csrf-token" header.', req.headers.origin);
+		console.warn('Missing required "dwitter-csrf-token" header.', req.headers.origin);
 		return res.status(403).json({ message: 'Failed CSRF check' });
 	}
 	validateCsrfToken(csrfHeader!)
 		.then(valid => {
 			if (!valid) {
 				console.warn(
-					'Value provided in "_dwitter-csrf-token" header does not validate.',
+					'Value provided in "dwitter-csrf-token" header does not validate.',
 					req.headers.origin,
 					csrfHeader
 				);
