@@ -26,7 +26,10 @@ export default function MyInfo({ authService }: Props) {
 
 	const onSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		authService.changeProfile(url).catch(error => onError(error.toString()));
+		authService
+			.changeProfile(url)
+			.then(() => alert('Succeed!'))
+			.catch(error => onError(error.toString()));
 	};
 
 	const onError = (error: string) => {
