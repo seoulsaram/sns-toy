@@ -32,6 +32,6 @@
 
 ## Try
 
-[Go to try](https://my-sns.netlify.app/info)
+[Go to try](https://my-sns.netlify.app)
 
 </div>
