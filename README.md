@@ -28,8 +28,12 @@
 
 ## App demo
 
+![나의 동영상](https://github.com/seoulsaram/sns-toy/assets/70192334/15a434a8-a1bf-41aa-8c8b-7288dae5d1cf)
+
+
+
 ## Try
 
-[Go to try](https://my-sns.netlify.app/info)
+[Go to try](https://my-sns.netlify.app)
 
 </div>
