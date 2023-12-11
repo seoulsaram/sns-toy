@@ -6,17 +6,21 @@ import { CookieOptions, Request, Response } from 'express';
 import { config } from '../config';
 
 export async function signup(req: Request, res: Response) {
-	const user: Omit<User, 'id'> = req.body;
-	const found = await findByUsername(user.username);
-	if (found) {
-		return res.status(409).json({ message: `${user.username} already exists` });
-	}
+	try {
+		const user: Omit<User, 'id'> = req.body;
+		const found = await findByUsername(user.username);
+		if (found) {
+			return res.status(409).json({ message: `${user.username} already exists` });
+		}
 
-	const hashed = await bcrypt.hash(user.password, config.bcrypt.saltRounds);
-	const userId = await createUser({ ...user, password: hashed });
-	const token = createJwtToken(userId.toString());
-	setToken(res, token);
-	res.status(201).json({ token, username: user.username });
+		const hashed = await bcrypt.hash(user.password, config.bcrypt.saltRounds);
+		const userId = await createUser({ ...user, password: hashed });
+		const token = createJwtToken(userId.toString());
+		setToken(res, token);
+		res.status(201).json({ token, username: user.username });
+	} catch (error) {
+		res.sendStatus(500);
+	}
 }
 
 export async function login(req: Request, res: Response) {
