@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axiosRetry from 'axios-retry';
+import { isMobile } from '../util/findAgent';
 
 const defaultRetryConfig = {
 	retries: 3,
@@ -9,7 +10,13 @@ export default class HttpClient {
 	private getCsrfToken: () => string | null | undefined;
 	private client: AxiosInstance;
 
-	constructor(baseURL: string, getCsrfToken: () => string | null | undefined, config = defaultRetryConfig) {
+	constructor(
+		baseURL: string,
+		getCsrfToken: () => string | null | undefined,
+		getAccessToken: () => string | null | undefined,
+		isWeb: boolean,
+		config = defaultRetryConfig,
+	) {
 		this.getCsrfToken = getCsrfToken;
 		this.client = axios.create({
 			baseURL,
@@ -19,6 +26,11 @@ export default class HttpClient {
 			},
 		});
 		this.client.defaults.withCredentials = true;
+
+		if (!isWeb) {
+			this.client.defaults.headers.Authorization = getAccessToken() as string;
+		}
+
 		axiosRetry(this.client, {
 			retries: config.retries,
 			retryDelay: retryCount => {
