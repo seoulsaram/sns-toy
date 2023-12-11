@@ -27,7 +27,9 @@
 - Deployed in CloudType
 
 ## App demo
-![app demo](https://github.com/seoulsaram/sns-toy/assets/70192334/275ca4af-d313-446a-bfab-820503e2399f)
+
+![나의 동영상](https://github.com/seoulsaram/sns-toy/assets/70192334/15a434a8-a1bf-41aa-8c8b-7288dae5d1cf)
+
 
 
 ## Try
