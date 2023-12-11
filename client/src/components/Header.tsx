@@ -42,26 +42,30 @@ const Header = memo(({ username, user, logout }: Props) => {
 						<img src="./img/logo.png" alt="Our Talk Logo" className="logo-img" />
 					</button>
 					{!username && <h1 className="header-welcome">Welcome to Our Talk !</h1>}
-					{username && (
-						<button onClick={onUserInfo} className="logo-user" title="change user info">
-							@{username}
-						</button>
-					)}
 				</div>
-				<nav className="menu">
-					{username && (
-						<>
-							<button onClick={onAllTweets}>All Talks</button>
-							<button onClick={onMyTweets}>My Talks</button>
-							<button className="menu-item" onClick={onLogout}>
-								Logout
+				<div className="user-menu">
+					<div className="logo-user-container">
+						{username && (
+							<button onClick={onUserInfo} className="logo-user" title="change user info">
+								@{username}
 							</button>
-						</>
-					)}
-					<button title="information" onClick={onInformation}>
-						<img src="./img/info.svg" alt="info" />
-					</button>
-				</nav>
+						)}
+					</div>
+					<nav className="menu">
+						{username && (
+							<>
+								<button onClick={onAllTweets}>All Talks</button>
+								<button onClick={onMyTweets}>My Talks</button>
+								<button className="menu-item" onClick={onLogout}>
+									Logout
+								</button>
+							</>
+						)}
+						<button title="information" onClick={onInformation}>
+							<img src="./img/info.svg" alt="info" />
+						</button>
+					</nav>
+				</div>
 			</header>
 			<Outlet />
 		</div>
