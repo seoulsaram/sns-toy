@@ -1,7 +1,7 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../db/database';
 
-export type User = {
+export type User = Model & {
 	id: string;
 	username: string;
 	password: string;
@@ -59,4 +59,13 @@ export async function findByUsername(username: string): Promise<User | null> {
 export async function findById(id: string): Promise<User | null> {
 	const res = (await User.findByPk(id)) as User | null;
 	return res;
+}
+
+export async function update(id: number, url: string): Promise<User | null> {
+	const res = (await User.findByPk(id)) as User | null;
+	if (!res) {
+		throw new Error();
+	}
+	res.url = url;
+	return res.save();
 }

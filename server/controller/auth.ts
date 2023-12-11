@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-import { User, createUser, findById, findByUsername } from '../data/auth';
+import { User, createUser, findById, findByUsername, update } from '../data/auth';
 import { CookieOptions, Request, Response } from 'express';
 import { config } from '../config';
 
@@ -58,7 +58,18 @@ function createJwtToken(id: string) {
 export async function me(req: Request, res: Response) {
 	const user = await findById(req.userId);
 	if (!user) return res.status(404).json({ message: 'User not found' });
-	res.status(200).json({ token: req.token, username: user.username });
+	res.status(200).json({ token: req.token, username: user.username, url: user.url });
+}
+
+export async function updateUrl(req: Request, res: Response) {
+	const id = Number(req.userId);
+	const url = req.body?.url;
+	try {
+		const user = await update(id, url);
+		res.status(200).json(user);
+	} catch (err) {
+		res.status(404).json({ message: 'User dose not exist.' });
+	}
 }
 
 function setToken(res: Response, token: string) {
