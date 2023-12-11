@@ -22,7 +22,7 @@ const Header = memo(({ username, user, logout }: Props) => {
 	const onLogout = () => {
 		if (window.confirm('Do you want to log out?')) {
 			logout();
-			navigate('/login');
+			navigate('/');
 		}
 	};
 
