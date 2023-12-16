@@ -6,7 +6,6 @@
 	--color-grey: #dee0e0;
 	--color-darkGrey: #969696;
 	--color-red: #cc473d;
-	--color-green: #7aa300;
 	--color-yellow: #fff6b0;
 	--color-shadow: rgba(0, 0, 0, 0.2);
 	--size-avatar: 38px;
@@ -15,6 +14,9 @@
 	--color-main-2: #dbf487;
 	--color-secondary: #ede9e0;
 	--color-green: #1a3d21;
+
+	--box-shadow: rgba(0, 0, 33, 0.07) 0px 16px 22.4px 4.8px, rgba(0, 0, 33, 0.05) 0px 3.2px 16px 0px,
+		rgba(0, 0, 33, 0.07) 0px 0px 1px 0px;
 }
 
 body {
@@ -58,10 +60,7 @@ button {
 	background-color: var(--color-white);
 	display: flex;
 	flex-direction: column;
-	box-shadow:
-		rgba(0, 0, 33, 0.07) 0px 16px 22.4px 4.8px,
-		rgba(0, 0, 33, 0.05) 0px 3.2px 16px 0px,
-		rgba(0, 0, 33, 0.07) 0px 0px 1px 0px;
+	box-shadow: var(--box-shadow);
 }
 
 .header {
@@ -72,10 +71,7 @@ button {
 	padding: 8px;
 	margin-bottom: 16px;
 	background-color: var(--color-main-1);
-	box-shadow:
-		rgba(0, 0, 33, 0.07) 0px 16px 22.4px 4.8px,
-		rgba(0, 0, 33, 0.05) 0px 3.2px 16px 0px,
-		rgba(0, 0, 33, 0.07) 0px 0px 1px 0px;
+	box-shadow: var(--box-shadow);
 }
 
 .header:hover {
@@ -199,6 +195,7 @@ button {
 	transition: 0.3s;
 	margin-bottom: 16px;
 	padding: 8px;
+	padding-bottom: 14px;
 	display: flex;
 	justify-content: space-between;
 	border-radius: 8px;
@@ -259,6 +256,19 @@ button {
 	margin: 0px 8px;
 	width: 100%;
 }
+.tweet-content {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.tweet-drawing {
+	border: 1px solid rgba(170, 170, 170, 0.295);
+	width: 280px;
+	height: 280px;
+	border-radius: 8px;
+	margin-top: 12px;
+}
 
 .tweet-name {
 	font-size: 0.9rem;
@@ -313,7 +323,7 @@ button {
 .tweet-action {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	gap: 8px;
 }
 
 .tweet-action-btn {
@@ -376,4 +386,39 @@ button {
 .info a:visited,
 .info a:hover {
 	color: var(--color-green);
+}
+
+#painter {
+	position: absolute;
+	top: 60%;
+	right: 0;
+	z-index: 11111;
+	background-color: #ffffff;
+	padding: 14px 18px 18px;
+	border-radius: 16px;
+	box-shadow: var(--box-shadow);
+}
+
+.painter-color-palette {
+	display: flex;
+	justify-content: right;
+	margin-bottom: 4px;
+}
+
+.painter-selected-color {
+	width: 24px;
+	height: 24px;
+	background: transparent;
+}
+
+#drawingBoard {
+	border: 1px solid var(--color-main-1);
+	border-radius: 4px;
+}
+
+.painter-button-group {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 14px;
 }

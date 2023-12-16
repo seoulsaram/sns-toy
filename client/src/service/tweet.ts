@@ -24,10 +24,10 @@ export default class TweetService {
 		});
 	}
 
-	async postTweet(text: string) {
+	async postTweet(text: string, drawing: string) {
 		return this.http.fetch(`/tweets`, {
 			method: 'POST',
-			body: JSON.stringify({ text, username: 'ellie', name: 'Ellie' }),
+			body: JSON.stringify({ text, drawing, username: 'ellie', name: 'Ellie' }),
 		});
 	}
 

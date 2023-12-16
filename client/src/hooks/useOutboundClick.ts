@@ -18,8 +18,8 @@ export default function useOutboundClick(
 
 		document.addEventListener('click', handleClickOutside, true);
 
-		return () => {
-			document.removeEventListener('click', handleClickOutside, true);
-		};
+		// return () => {
+		// 	document.removeEventListener('click', handleClickOutside, true);
+		// };
 	}, [ref, callback, exceptRefs]);
 }

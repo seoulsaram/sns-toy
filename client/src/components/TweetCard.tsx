@@ -1,4 +1,5 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
+
 import parseDate from '../util/date';
 import Avatar from './Avatar';
 import EditTweetForm from './EditTweetForm';
@@ -14,10 +15,10 @@ type Props = {
 };
 
 const TweetCard = memo(({ tweet, owner, onDelete, onUpdate, onUsernameClick, onCardClick }: Props) => {
-	const { id, username, name, url, text, createdAt } = tweet;
+	const { id, username, drawing, name, url, text, createdAt } = tweet;
+
 	const [editing, setEditing] = useState(false);
 	const onClose = () => setEditing(false);
-
 	return (
 		<li className="tweet" style={{ cursor: 'pointer' }}>
 			<span className="tweet-container">
@@ -28,22 +29,24 @@ const TweetCard = memo(({ tweet, owner, onDelete, onUpdate, onUsernameClick, onC
 						@{username}
 					</button>
 					<span className="tweet-date"> · {parseDate(createdAt)}</span>
-
-					{editing ? (
-						<EditTweetForm tweet={tweet} onUpdate={onUpdate} onClose={onClose} />
-					) : (
-						<button className="tweet-detail-btn" onClick={() => onCardClick(id)}>
-							{text}
-						</button>
-					)}
+					<div className="tweet-content">
+						{drawing && <img src={drawing} alt="drawing" className="tweet-drawing" />}
+						{editing ? (
+							<EditTweetForm tweet={tweet} onUpdate={onUpdate} onClose={onClose} />
+						) : (
+							<button className="tweet-detail-btn" onClick={() => onCardClick(id)}>
+								{text}
+							</button>
+						)}
+					</div>
 				</div>
 			</span>
 			{owner && (
 				<div className="tweet-action">
-					<button className="tweet-action-btn" onClick={() => onDelete(id)}>
+					<button title="delete talk" className="tweet-action-btn" onClick={() => onDelete(id)}>
 						x
 					</button>
-					<button className="tweet-action-btn" onClick={() => setEditing(true)}>
+					<button title="edit talk" className="tweet-action-btn" onClick={() => setEditing(true)}>
 						✎
 					</button>
 				</div>

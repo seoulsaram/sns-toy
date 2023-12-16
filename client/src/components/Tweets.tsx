@@ -72,7 +72,7 @@ const Tweets = memo(({ tweetService, addable }: Props) => {
 
 	return (
 		<div>
-			{addable && <NewTweetForm tweetService={tweetService} onError={onError} onCreated={onCreated} />}
+			{addable && <NewTweetForm tweetService={tweetService} onError={onError} />}
 			{error && <Banner text={error} isAlert />}
 			{tweets.length === 0 && <p className="tweets-empty">No Talks Yet</p>}
 			<ul className="tweets">
