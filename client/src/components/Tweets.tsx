@@ -19,6 +19,7 @@ const Tweets = memo(({ tweetService, addable }: Props) => {
 	const usernameQuery = useParams();
 
 	const { user } = useAuth();
+
 	useEffect(() => {
 		tweetService
 			.getTweets(usernameQuery?.username)

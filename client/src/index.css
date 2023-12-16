@@ -89,6 +89,7 @@ button {
 }
 
 .header-welcome {
+	font-size: 2rem;
 	color: var(--color-main-2);
 }
 

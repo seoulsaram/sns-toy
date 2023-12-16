@@ -2,8 +2,8 @@ import React, { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { Button, TextField } from '@mui/material';
 
 import TweetService from '../service/tweet';
-import { TweetType } from '../types/tweet.type';
 import Painter from './Painter';
+import { useAuth } from '../context/AuthContext';
 
 type Props = {
 	tweetService: TweetService;
@@ -16,6 +16,8 @@ const NewTweetForm = ({ tweetService, onError }: Props) => {
 
 	const painterRef = useRef<HTMLCanvasElement | null>(null);
 	const [openPainter, setOpenPainter] = useState(false);
+
+	const { user } = useAuth();
 
 	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -50,7 +52,7 @@ const NewTweetForm = ({ tweetService, onError }: Props) => {
 			<TextField
 				type="text"
 				fullWidth
-				placeholder="Post your talk"
+				placeholder={user ? 'Post your talk' : 'Please login to post your talk 💚'}
 				value={tweet}
 				onChange={onChange}
 				size="small"
@@ -58,10 +60,10 @@ const NewTweetForm = ({ tweetService, onError }: Props) => {
 				required
 			/>
 			{openPainter && <Painter onPaintSave={onPaintSave} closePainter={closePainter} ref={painterRef} />}
-			<Button title="open painter" variant="contained" onClick={() => setOpenPainter(!openPainter)}>
+			<Button title="open painter" variant="contained" onClick={() => setOpenPainter(!openPainter)} disabled={!user}>
 				✦
 			</Button>
-			<Button variant="contained" type="submit" disabled={openPainter}>
+			<Button variant="contained" type="submit" disabled={openPainter || !user}>
 				Post
 			</Button>
 		</form>

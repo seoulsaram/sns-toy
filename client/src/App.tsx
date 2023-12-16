@@ -22,14 +22,12 @@ function App({ tweetService, authService }: Props) {
 				<Routes>
 					<Route path="/" element={<Header username={user?.username} user={user} logout={logout} />}>
 						{!user ? (
-							<Route path="" element={<Login onSignUp={signUp} onLogin={logIn} />} />
+							<Route path="login" element={<Login onSignUp={signUp} onLogin={logIn} />} />
 						) : (
-							<>
-								<Route path="" element={<AllTweets tweetService={tweetService} />} />
-								<Route path="myInfo" element={<MyInfo authService={authService} />} />
-								<Route path=":username" element={<MyTweets tweetService={tweetService} />} />
-							</>
+							<Route path="myInfo" element={<MyInfo authService={authService} />} />
 						)}
+						<Route path="" element={<AllTweets tweetService={tweetService} />} />
+						<Route path=":username" element={<MyTweets tweetService={tweetService} />} />
 						<Route path="info" element={<Information />} />
 					</Route>
 					<Route path="*" element={<PageNotFound />} />

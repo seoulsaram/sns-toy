@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { User } from '../types/user.type';
 
 type Props = {
@@ -34,14 +34,23 @@ const Header = memo(({ username, user, logout }: Props) => {
 		navigate(`/info`);
 	};
 
+	const onLogoClick = () => {
+		if (!user) navigate('/login');
+		else onAllTweets();
+	};
+
 	return (
 		<div>
 			<header className="header">
 				<div className="logo">
-					<button onClick={onAllTweets}>
+					<button onClick={onLogoClick}>
 						<img src="./img/logo.png" alt="Our Talk Logo" className="logo-img" />
 					</button>
-					{!username && <h1 className="header-welcome">Welcome to Our Talk !</h1>}
+					{!user && (
+						<Link to="/login" style={{ textDecoration: 'none' }}>
+							<h1 className="header-welcome">Welcome to Our Talk !</h1>
+						</Link>
+					)}
 				</div>
 				<div className="user-menu">
 					<div className="logo-user-container">
