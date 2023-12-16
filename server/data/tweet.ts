@@ -5,6 +5,7 @@ import { User } from './auth';
 type TweetType = Model & {
 	id: number;
 	text: string;
+	drawing: string;
 	createdAt: string;
 	url?: string;
 	username: string;
@@ -23,6 +24,9 @@ export const Tweet = sequelize.define<TweetType>('tweet', {
 		type: DataTypes.TEXT,
 		allowNull: false,
 	},
+	drawing: {
+		type: DataTypes.TEXT,
+	},
 });
 
 // 관계 정의해줌. 알아서 FK를 만들어준다. 때문에 userId필드를 명시해주지 않음.
@@ -32,6 +36,7 @@ const INCLUDE_USER: FindOptions = {
 	attributes: [
 		'id',
 		'text',
+		'drawing',
 		'createdAt',
 		'userId',
 		'updatedAt',
@@ -76,8 +81,8 @@ export async function getById(id: string): Promise<TweetType | null> {
 	return res;
 }
 
-export async function create(text: string, userId: string): Promise<TweetType | null> {
-	const res = await Tweet.create({ text, userId });
+export async function create(text: string, drawing: string, userId: string): Promise<TweetType | null> {
+	const res = await Tweet.create({ text, drawing, userId });
 	const created = getById(res.dataValues.id);
 	return created;
 }
