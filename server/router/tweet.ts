@@ -14,10 +14,10 @@ const validateTweet = [
 
 // GET /tweets
 // GET /tweets?username=:username
-router.get('/', isAuth, tweetController.getTweets);
+router.get('/', tweetController.getTweets);
 
 // GET /tweets:id
-router.get('/:id', isAuth, tweetController.getTweet);
+router.get('/:id', tweetController.getTweet);
 
 // POST /tweets
 router.post('/', isAuth, validateTweet, tweetController.postTweet);
