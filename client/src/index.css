@@ -270,6 +270,13 @@ button {
 	margin-top: 12px;
 }
 
+@media screen and (max-width: 410px) {
+	.tweet-drawing {
+		width: 210px;
+		height: 210px;
+	}
+}
+
 .tweet-name {
 	font-size: 0.9rem;
 	font-weight: bold;
@@ -388,7 +395,8 @@ button {
 	color: var(--color-green);
 }
 
-#painter {
+#painter,
+#mobile-painter {
 	position: absolute;
 	top: 60%;
 	right: 0;
@@ -399,6 +407,15 @@ button {
 	box-shadow: var(--box-shadow);
 }
 
+#mobile-painter {
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+#mobile-painter canvas,
+#painter canvas {
+	border: 1px solid var(--color-main-1);
+}
 .painter-color-palette {
 	display: flex;
 	justify-content: right;
@@ -412,8 +429,8 @@ button {
 }
 
 #drawingBoard {
-	border: 1px solid var(--color-main-1);
-	border-radius: 4px;
+	display: flex;
+	justify-content: center;
 }
 
 .painter-button-group {

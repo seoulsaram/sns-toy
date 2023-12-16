@@ -1,14 +1,12 @@
 import { Button } from '@mui/material';
-import React, { MouseEvent, RefObject, forwardRef, useState } from 'react';
+import React, { MouseEvent, RefObject, TouchEventHandler, forwardRef, useState } from 'react';
+import { isMobile } from '../util/findAgent';
 
 const Painter = forwardRef((props: { onPaintSave: () => void; closePainter: () => void }, ref) => {
 	const { onPaintSave, closePainter } = props;
 
 	const [down, setDown] = useState(false);
 	const [canvasContext, setCanvasContext] = useState<CanvasRenderingContext2D | null>(null);
-
-	let canvasX = 0;
-	let canvasY = 0;
 
 	const startCanvas = (e: MouseEvent<HTMLCanvasElement>) => {
 		const canvas = e.currentTarget.getContext('2d');
@@ -17,28 +15,56 @@ const Painter = forwardRef((props: { onPaintSave: () => void; closePainter: () =
 
 		setDown(true);
 		canvasContext?.beginPath();
-
-		canvasX = e.nativeEvent.offsetX;
-		canvasY = e.nativeEvent.offsetY;
-		canvasContext?.moveTo(canvasX, canvasY);
+		canvasContext?.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
 	};
 
 	const startDraw = (e: MouseEvent<HTMLCanvasElement>) => {
 		if (down) {
-			canvasX = e.nativeEvent.offsetX;
-			canvasY = e.nativeEvent.offsetY;
-			canvasContext?.lineTo(canvasX, canvasY);
-			canvasContext?.stroke();
+			moveStroke(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
 		}
 	};
 
-	const stopDraw = (e: MouseEvent<HTMLCanvasElement>) => {
+	const startMobileCanvas = (e: React.TouchEvent<HTMLCanvasElement>) => {
+		const event = e.target as HTMLCanvasElement;
+		const canvas = event.getContext('2d');
+
+		if (canvas?.lineWidth) canvas.lineWidth = 3;
+
+		setCanvasContext(canvas);
+		setDown(true);
+		canvasContext?.beginPath();
+
+		const touch = e.touches[0];
+		canvasContext?.moveTo(
+			touch.clientX - event.getBoundingClientRect().left,
+			touch.clientY - event.getBoundingClientRect().top,
+		);
+	};
+
+	const startMobileDraw = (e: React.TouchEvent<HTMLCanvasElement>) => {
+		if (down) {
+			const touch = e.touches[0];
+			const canvas = e.target as HTMLCanvasElement;
+
+			moveStroke(
+				touch.clientX - canvas.getBoundingClientRect().left,
+				touch.clientY - canvas.getBoundingClientRect().top,
+			);
+		}
+	};
+
+	const stopDraw = (e: MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
 		setDown(false);
 		canvasContext?.closePath();
 	};
 
+	const moveStroke = (x: number, y: number) => {
+		canvasContext?.lineTo(x, y);
+		canvasContext?.stroke();
+	};
+
 	return (
-		<div id="painter">
+		<div id={`${isMobile() ? 'mobile-painter' : 'painter'}`}>
 			<div className="painter-color-palette">
 				<input
 					className="painter-selected-color"
@@ -56,12 +82,14 @@ const Painter = forwardRef((props: { onPaintSave: () => void; closePainter: () =
 			<div id="drawingBoard">
 				<canvas
 					ref={ref as RefObject<HTMLCanvasElement>}
-					id="myCanvas"
 					width="280px"
 					height="280px"
 					onMouseDown={startCanvas}
 					onMouseMove={startDraw}
 					onMouseUp={stopDraw}
+					onTouchStart={startMobileCanvas}
+					onTouchMove={startMobileDraw}
+					onTouchEnd={stopDraw}
 				>
 					Oops! Canvas not supported in this browser
 				</canvas>
