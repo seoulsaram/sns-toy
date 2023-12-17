@@ -1,9 +1,10 @@
-import React, { ChangeEvent, FormEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { Button, TextField } from '@mui/material';
 
 import TweetService from '../service/tweet';
 import Painter from './Painter';
 import { useAuth } from '../context/AuthContext';
+import { isMobile } from '../util/findAgent';
 
 type Props = {
 	tweetService: TweetService;
@@ -15,9 +16,21 @@ const NewTweetForm = ({ tweetService, onError }: Props) => {
 	const [drawing, setDrawing] = useState('');
 
 	const painterRef = useRef<HTMLCanvasElement | null>(null);
+
 	const [openPainter, setOpenPainter] = useState(false);
+	const [showHelp, setShowHelp] = useState(false);
 
 	const { user } = useAuth();
+
+	const placeholder = user ? 'Post your talk' : 'Please login to post your talk 💚';
+
+	useEffect(() => {
+		if (openPainter && isMobile()) {
+			document.getElementsByTagName('body')[0].style.position = 'fixed';
+		} else {
+			document.getElementsByTagName('body')[0].style.position = 'initial';
+		}
+	}, [openPainter]);
 
 	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -48,25 +61,35 @@ const NewTweetForm = ({ tweetService, onError }: Props) => {
 	};
 
 	return (
-		<form className="tweet-form" onSubmit={onSubmit} style={{ position: 'relative' }}>
-			<TextField
-				type="text"
-				fullWidth
-				placeholder={user ? 'Post your talk' : 'Please login to post your talk 💚'}
-				value={tweet}
-				onChange={onChange}
-				size="small"
-				variant="outlined"
-				required
-			/>
-			{openPainter && <Painter onPaintSave={onPaintSave} closePainter={closePainter} ref={painterRef} />}
-			<Button title="open painter" variant="contained" onClick={() => setOpenPainter(!openPainter)} disabled={!user}>
-				✦
-			</Button>
-			<Button variant="contained" type="submit" disabled={openPainter || !user}>
-				Post
-			</Button>
-		</form>
+		<>
+			<form className="tweet-form" onSubmit={onSubmit} style={{ position: 'relative' }}>
+				{drawing && <img src={drawing} alt="drawing" className="tweet-drawing" />}
+				<TextField
+					type="text"
+					fullWidth
+					placeholder={placeholder}
+					title={placeholder}
+					value={tweet}
+					onChange={onChange}
+					onTouchStart={() => {
+						if (user) return;
+						setShowHelp(!showHelp);
+					}}
+					size="small"
+					variant="outlined"
+					required
+				/>
+
+				{openPainter && <Painter onPaintSave={onPaintSave} closePainter={closePainter} ref={painterRef} />}
+				<Button title="open painter" variant="contained" onClick={() => setOpenPainter(!openPainter)} disabled={!user}>
+					✦
+				</Button>
+				<Button variant="contained" type="submit" disabled={openPainter || !user}>
+					Post
+				</Button>
+			</form>
+			{showHelp && <p className="tweet-form-help-text">{placeholder}</p>}
+		</>
 	);
 };
 

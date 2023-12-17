@@ -56,7 +56,8 @@ button {
 .app {
 	width: 100vw;
 	max-width: 500px;
-	height: 100vh;
+	min-height: 100vh;
+	height: 100%;
 	background-color: var(--color-white);
 	display: flex;
 	flex-direction: column;
@@ -89,7 +90,7 @@ button {
 }
 
 .header-welcome {
-	font-size: 2rem;
+	font-size: 1.3rem;
 	color: var(--color-main-2);
 }
 
@@ -162,7 +163,8 @@ button {
 }
 
 .tweets {
-	height: calc(100vh - (158px));
+	height: 100%;
+
 	overflow-y: auto;
 	color: var(--color-black);
 	padding: 16px;
@@ -318,9 +320,24 @@ button {
 .tweet-form {
 	display: flex;
 	gap: 8px;
+	align-items: center;
 	width: 100%;
 	padding: 4px 16px;
-	/* background-color: var(--color-grey); */
+}
+
+.tweet-form img {
+	margin-top: 0;
+	width: 44px;
+	height: 44px;
+}
+
+.tweet-form-help-text {
+	width: 100%;
+	margin: 0;
+	padding: 4px 16px;
+	font-size: 0.8rem;
+	text-align: center;
+	color: var(--color-darkGrey);
 }
 
 .tweet-input {
