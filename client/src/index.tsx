@@ -13,6 +13,7 @@ import AuthErrorEventBus from './util/authErrorEventBus';
 import SocketClient from './network/socket';
 import { theme } from './theme/theme';
 import { isMobile } from './util/findAgent';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const config = {
 	retries: !process.env.REACT_APP_REQUEST_RETRY_COUNT ? 3 : Number(process.env.REACT_APP_REQUEST_RETRY_COUNT),
@@ -44,7 +45,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
 		<AuthProvider authService={authService} authErrorEventBus={authErrorEventBus}>
 			<ThemeProvider theme={theme}>
-				<App tweetService={tweetService} authService={authService} />
+				<ErrorBoundary>
+					<App tweetService={tweetService} authService={authService} />
+				</ErrorBoundary>
 			</ThemeProvider>
 		</AuthProvider>
 	</React.StrictMode>,
